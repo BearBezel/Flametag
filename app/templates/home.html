@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="card">
+    <div class="h1">Tag it. Claim it. Flame it.</div>
+    <p class="p">
+      Scan a lighter’s tag to see who it belongs to. Owners can set a public message (banter),
+      and a private message (return details) protected by a PIN.
+    </p>
+    <p class="p">
+      To test the app, open a sample token page like:
+      <span class="code">/l/TEST1234</span>
+    </p>
+    <form method="post" action="{{ url_for('main.admin_import') }}" class="card">
+      <div class="badge">Quick start (dev)</div>
+      <p class="p">Create a demo token instantly (no admin key needed). This is only for local testing.</p>
+      <input type="hidden" name="admin_key" value="{{ (config.get('ADMIN_KEY') or '') }}">
+      <input type="hidden" name="tokens" value="TEST1234">
+      <button type="submit">Create demo token</button>
+      <small>After running locally, visit <span class="code">/l/TEST1234</span></small>
+    </form>
+  </div>
+{% endblock %}

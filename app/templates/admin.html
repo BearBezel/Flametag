@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="card">
+    <div class="h1">Admin</div>
+    <p class="p">Optional tools to create or import lighter tokens into the database.</p>
+
+    <div class="row">
+      <div class="card">
+        <div class="badge">Generate tokens</div>
+        <form method="post" action="{{ url_for('main.admin_generate') }}">
+          <label>Admin key</label>
+          <input name="admin_key" placeholder="ADMIN_KEY from .env" />
+          <label>How many (max 5000)</label>
+          <input name="how_many" placeholder="e.g. 50" />
+          <button style="margin-top:10px;">Generate</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="badge">Import tokens</div>
+        <form method="post" action="{{ url_for('main.admin_import') }}">
+          <label>Admin key</label>
+          <input name="admin_key" placeholder="ADMIN_KEY from .env" />
+          <label>Tokens (one per line)</label>
+          <textarea name="tokens" placeholder="AB12CD34&#10;EF56GH78"></textarea>
+          <button style="margin-top:10px;">Import</button>
+          <p class="p" style="margin-top:10px;">Use this to import the codes you engraved/printed.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

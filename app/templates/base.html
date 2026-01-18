@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ title or "FlameTag" }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="brand">🔥 FlameTag</div>
+      <div><a href="{{ url_for('main.home') }}">Home</a> · <a href="{{ url_for('main.admin') }}">Admin</a></div>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash {{ 'ok' if category=='ok' else 'err' }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+
+    <div class="footer">
+      Tip: QR codes work best if they link to <span class="code">https://YOURDOMAIN/l/AB12CD34</span>.
+      Start with stickers, then engrave once it’s proven.
+    </div>
+  </div>
+</body>
+</html>

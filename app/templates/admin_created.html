@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="card">
+    <div class="h1">Created tokens</div>
+    <p class="p">Copy these into your QR generator (or print stickers).</p>
+    <div class="card">
+      {% for t in created %}
+        <div class="code" style="display:inline-block;margin:6px 6px 0 0;">{{ t }}</div>
+      {% endfor %}
+    </div>
+    <a href="{{ url_for('main.admin') }}"><button class="secondary">Back</button></a>
+  </div>
+{% endblock %}

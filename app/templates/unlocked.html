@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="card">
+    <div class="badge">Unlocked · Lighter <span class="code">{{ lighter.token }}</span></div>
+    <div class="h1" style="margin-top:10px;">Owner-only message</div>
+    <p class="p" style="font-size:18px;margin-top:10px;">{{ lighter.private_message }}</p>
+    <a href="{{ url_for('main.lighter_page', token=lighter.token) }}"><button class="secondary">Back</button></a>
+  </div>
+{% endblock %}
