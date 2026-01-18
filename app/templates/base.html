@@ -9,7 +9,13 @@
 <body>
   <div class="container">
     <div class="header">
-      <div class="brand">🔥 FlameTag</div>
+      <a class="brand" href="{{ url_for('main.home') }}">
+  <img
+    src="{{ url_for('static', filename='img/logo.png') }}"
+    alt="FlameTag"
+    class="brand-logo"
+  />
+</a>
       <div><a href="{{ url_for('main.home') }}">Home</a></div>
     </div>
 
