@@ -14,6 +14,38 @@
         2) Scan → see the public message<br>
         3) PIN unlocks the owner-only message
       </p>
+      <div class="card">
+  <div class="badge">Have a FlameTag code?</div>
+  <p class="p" style="margin-top:10px;">
+    Type the code from the sticker to view the message.
+  </p>
+
+  <form id="codeForm" class="code-form" autocomplete="off">
+    <input
+      id="codeInput"
+      class="code-input"
+      type="text"
+      placeholder="Enter code (e.g. R329QRY8)"
+      maxlength="32"
+      required
+    />
+    <button class="btn" type="submit">View</button>
+  </form>
+
+  <p class="p" style="margin-top:10px;">
+    Or open directly: <span class="code">https://flametag.app/l/YOURCODE</span>
+  </p>
+</div>
+
+<script>
+  document.getElementById("codeForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    const raw = document.getElementById("codeInput").value || "";
+    const token = raw.trim().replace(/\s+/g, "").toUpperCase();
+    if (!token) return;
+    window.location.href = "/l/" + token;
+  });
+</script>
     </div>
 
     <div class="card">
