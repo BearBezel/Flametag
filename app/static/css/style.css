@@ -1,0 +1,133 @@
+:root {
+  --bg:#070910;
+  --card:#121622;
+  --text:#eef2ff;
+  --muted:#aab1c6;
+  --accent:#ff6a00;
+  --danger:#ff4d6d;
+  --ok:#33d69f;
+}
+
+* { box-sizing: border-box }
+
+body {
+  margin: 0;
+  font-family: system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial;
+  color: var(--text);
+  background: linear-gradient(180deg,#070910, #0b0d12 40%, #070910);
+}
+
+a { color: var(--accent); text-decoration: none }
+
+.container {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 28px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.brand {
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-logo {
+  height: 36px;
+}
+
+.card {
+  background: rgba(18,22,34,0.92);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px;
+  padding: 18px;
+  margin: 14px 0;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+}
+
+.h1 {
+  font-size: 28px;
+  margin: 0 0 6px;
+}
+
+.p {
+  color: var(--muted);
+  margin: 0 0 10px;
+  line-height: 1.5;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  border: 1px solid rgba(255,255,255,0.12);
+  color: var(--muted);
+}
+
+label {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  margin: 10px 0 6px;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: #0b0f1b;
+  color: var(--text);
+  outline: none;
+}
+
+button {
+  cursor: pointer;
+  border: 0;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-weight: 700;
+  color: #0b0d12;
+  background: var(--accent);
+}
+
+.flash {
+  padding: 10px 12px;
+  border-radius: 12px;
+  margin: 10px 0;
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+.flash.ok {
+  border-color: rgba(51,214,159,0.35);
+  background: rgba(51,214,159,0.08);
+}
+
+.flash.err {
+  border-color: rgba(255,77,109,0.35);
+  background: rgba(255,77,109,0.08);
+}
+
+.code {
+  font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+  background: #0b0f1b;
+  padding: 2px 8px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.10);
+}
+
+.footer {
+  margin-top: 24px;
+  color: var(--muted);
+  font-size: 12px;
+}
