@@ -120,8 +120,8 @@ button {
 }
 
 @media (max-width:720px){
-  .brand-logo{ height: 72px; }
-  .brand{ min-height: 72px; }
+  .brand-logo{ height: 100px; }
+  .brand{ min-height: 100px; }
 }
 
 
