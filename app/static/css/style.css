@@ -111,12 +111,20 @@ button {
 .flash.ok {
   border-color: rgba(51,214,159,0.35);
   background: rgba(51,214,159,0.08);
-}
-.brand-logo {
-  height: 100px;  
+
+.brand-logo{
+  height: 100px;
   width: auto;
   display: block;
+  object-fit: contain;
 }
+
+/* mobile */
+@media (max-width:720px){
+  .brand-logo{ height: 72px; }
+}
+
+
 
 .flash.err {
   border-color: rgba(255,77,109,0.35);
