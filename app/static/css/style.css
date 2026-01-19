@@ -112,6 +112,11 @@ button {
   border-color: rgba(51,214,159,0.35);
   background: rgba(51,214,159,0.08);
 }
+.brand-logo {
+  height: 52px;  
+  width: auto;
+  display: block;
+}
 
 .flash.err {
   border-color: rgba(255,77,109,0.35);
