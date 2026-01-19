@@ -119,10 +119,11 @@ button {
   object-fit: contain;
 }
 
-/* mobile */
 @media (max-width:720px){
   .brand-logo{ height: 72px; }
+  .brand{ min-height: 72px; }
 }
+
 
 
 
