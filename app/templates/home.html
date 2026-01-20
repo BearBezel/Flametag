@@ -1,60 +1,82 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="hero">
+<div class="card">
 
-  <!-- Logo -->
-  <img
-    src="{{ url_for('static', filename='img/logo.png') }}"
-    alt="FlameTag"
-    class="hero-logo"
-  />
+  <div class="hero">
+    <div class="h1">Lock your personalised message.</div>
+    <p class="p hero-sub">
+      FlameTag is built into the product. Scan a FlameTag QR (or type the code) to view the public message.
+      Owners can unlock a private message with a PIN.
+    </p>
+  </div>
 
-  <!-- Search -->
-  <form id="codeForm" class="hero-search" autocomplete="off">
-    <input
-      id="codeInput"
-      type="text"
-      placeholder="Enter code (e.g. R329QRY8)"
-      required
-    />
+  <div class="searchWrap">
+    <form id="codeForm" autocomplete="off">
+      <input
+        id="codeInput"
+        type="text"
+        placeholder="Enter code (e.g. R329QRY8)"
+        maxlength="32"
+        required
+      />
 
-    <div class="hero-actions">
-      <button class="btn primary" type="submit">View</button>
-      <button class="btn secondary" type="button" id="scanBtn">Scan QR</button>
+      <div class="searchRow">
+        <button class="searchBtn primary" type="submit">View</button>
+
+        <button class="searchBtn scan" type="button" id="scanBtn">
+          <span style="display:inline-flex;align-items:center;gap:10px;">
+            <img src="{{ url_for('static', filename='img/icon-qr.png') }}" alt="" style="width:18px;height:18px;object-fit:contain;">
+            Scan QR
+          </span>
+        </button>
+      </div>
+
+      <p class="p" style="margin-top:10px;">Try an example: <span class="code">R329QRY8</span></p>
+    </form>
+  </div>
+
+  <div class="pillCenter">
+    <div class="pill">How it works</div>
+  </div>
+
+  <div class="howGrid">
+    <div class="howCard">
+      <img src="{{ url_for('static', filename='img/icon-qr.png') }}" alt="QR">
+      <div class="t">QR built in</div>
+      <div class="d">Each product includes a unique FlameTag QR added by the brand.</div>
     </div>
-  </form>
 
-</div>
-
-<!-- How it works -->
-<div class="how-it-works">
-  <button class="how-btn">How it works</button>
-
-  <div class="how-grid">
-    <div class="how-card">
-      <div class="how-icon">🔥</div>
-      <p>FlameTag QR added to the lighter</p>
+    <div class="howCard">
+      <img src="{{ url_for('static', filename='img/icon-message.png') }}" alt="Message">
+      <div class="t">Public message</div>
+      <div class="d">Scan to view the message the owner chooses to share.</div>
     </div>
 
-    <div class="how-card">
-      <div class="how-icon">📱</div>
-      <p>Scan to view the public message</p>
-    </div>
-
-    <div class="how-card">
-      <div class="how-icon">🔒</div>
-      <p>Unlock the private message with a PIN</p>
+    <div class="howCard">
+      <img src="{{ url_for('static', filename='img/icon-lock.png') }}" alt="Lock">
+      <div class="t">Private message</div>
+      <div class="d">Owners unlock private details using a PIN.</div>
     </div>
   </div>
+
 </div>
 
 <script>
+  // View button (code -> /l/CODE)
   document.getElementById("codeForm").addEventListener("submit", function (e) {
     e.preventDefault();
-    const token = document.getElementById("codeInput").value.trim().toUpperCase();
+    const raw = document.getElementById("codeInput").value || "";
+    const token = raw.trim().replace(/\s+/g, "").toUpperCase();
     if (!token) return;
     window.location.href = "/l/" + token;
+  });
+
+  // Scan QR:
+  // iPhone Safari does NOT reliably support BarcodeDetector camera scanning.
+  // So we do the best "web" option: tell users to use their Camera app.
+  document.getElementById("scanBtn").addEventListener("click", function () {
+    alert("On iPhone, use the Camera app to scan the FlameTag QR. It will open the page automatically.");
   });
 </script>
 
