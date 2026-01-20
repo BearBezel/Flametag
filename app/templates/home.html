@@ -34,7 +34,14 @@
       maxlength="32"
       required
     />
-    <button class="btn" type="submit">View</button>
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
+  <button class="btn" type="submit">View</button>
+
+  <button class="btn secondary" type="button" id="scanBtn">
+    Scan QR
+  </button>
+</div>
+
   </form>
         <p class="p" style="margin-top:10px;">
   Example code: <span class="code">R329QRY8</span>
@@ -52,6 +59,96 @@
     if (!token) return;
     window.location.href = "/l/" + token;
   });
+   // Scan QR button (phone camera)
+  const scanBtn = document.getElementById("scanBtn");
+
+  if (scanBtn) {
+    scanBtn.addEventListener("click", async () => {
+      if (!("BarcodeDetector" in window)) {
+        alert("Your browser can’t scan QR here. Use your phone camera to scan the sticker.");
+        return;
+      }
+
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "environment" }
+        });
+
+        const overlay = document.createElement("div");
+        overlay.style.position = "fixed";
+        overlay.style.inset = "0";
+        overlay.style.background = "rgba(0,0,0,0.9)";
+        overlay.style.zIndex = "9999";
+        overlay.style.display = "flex";
+        overlay.style.flexDirection = "column";
+        overlay.style.alignItems = "center";
+        overlay.style.justifyContent = "center";
+        overlay.style.padding = "20px";
+
+        const video = document.createElement("video");
+        video.style.width = "100%";
+        video.style.maxWidth = "420px";
+        video.style.borderRadius = "14px";
+        video.autoplay = true;
+        video.playsInline = true;
+        video.srcObject = stream;
+
+        const tip = document.createElement("div");
+        tip.style.color = "#fff";
+        tip.style.marginTop = "12px";
+        tip.style.fontFamily = "system-ui, -apple-system, Segoe UI, Roboto, Arial";
+        tip.textContent = "Point your camera at the FlameTag QR…";
+
+        const close = document.createElement("button");
+        close.className = "btn secondary";
+        close.type = "button";
+        close.textContent = "Close";
+        close.style.marginTop = "14px";
+
+        overlay.appendChild(video);
+        overlay.appendChild(tip);
+        overlay.appendChild(close);
+        document.body.appendChild(overlay);
+
+        const detector = new BarcodeDetector({ formats: ["qr_code"] });
+
+        let active = true;
+
+        const stopAll = () => {
+          active = false;
+          stream.getTracks().forEach(t => t.stop());
+          overlay.remove();
+        };
+
+        close.addEventListener("click", stopAll);
+
+        const scanLoop = async () => {
+          if (!active) return;
+          try {
+            const barcodes = await detector.detect(video);
+            if (barcodes.length) {
+              const value = (barcodes[0].rawValue || "").trim();
+              stopAll();
+
+              if (value.startsWith("http")) {
+                window.location.href = value;
+              } else {
+                window.location.href = "/l/" + value.replace(/\s+/g, "").toUpperCase();
+              }
+              return;
+            }
+          } catch (e) {}
+
+          requestAnimationFrame(scanLoop);
+        };
+
+        requestAnimationFrame(scanLoop);
+      } catch (err) {
+        alert("Camera access was blocked. Please allow camera access and try again.");
+      }
+    });
+  }
+ 
 </script>
     </div>
 
