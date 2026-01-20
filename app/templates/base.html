@@ -4,36 +4,21 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{{ title or "FlameTag" }}</title>
+
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 <body>
-  <div class="container">
-    <div class="header">
-      <a class="brand" href="{{ url_for('main.home') }}">
-  <img
-    src="{{ url_for('static', filename='img/logo.png') }}"
-    alt="FlameTag"
-    class="brand-logo"
-  />
-</a>
-
-    </div>
-
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-wrap">
         {% for category, message in messages %}
           <div class="flash {{ 'ok' if category=='ok' else 'err' }}">{{ message }}</div>
         {% endfor %}
-      {% endif %}
-    {% endwith %}
+      </div>
+    {% endif %}
+  {% endwith %}
 
-    {% block content %}{% endblock %}
-
-   <div class="footer">
-  © FlameTag
-</div>
- 
-
-  </div>
+  {% block content %}{% endblock %}
 </body>
-</html>
+</html>       
