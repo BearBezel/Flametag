@@ -1,69 +1,83 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="card">
-
+<div class="page">
   <div class="hero">
-    <div class="h1">Lock your personalised message.</div>
-    <p class="p hero-sub">
-      FlameTag is built into the product. Scan a FlameTag QR (or type the code) to view the public message.
-      Owners can unlock a private message with a PIN.
-    </p>
-  </div>
 
-  <div class="searchWrap">
-    <form id="codeForm" autocomplete="off">
+    <!-- Big centered logo -->
+    <img
+      class="hero-logo"
+      src="{{ url_for('static', filename='img/logo.png') }}"
+      alt="FlameTag"
+    />
+
+    <!-- Search bar -->
+    <form id="codeForm" class="search" autocomplete="off">
       <input
         id="codeInput"
+        class="search-input"
         type="text"
         placeholder="Enter code (e.g. R329QRY8)"
         maxlength="32"
+        inputmode="text"
+        autocapitalize="characters"
+        autocomplete="off"
         required
       />
+      <span class="search-icon" aria-hidden="true">⌕</span>
 
-      <div class="searchRow">
-        <button class="searchBtn primary" type="submit">View</button>
-
-        <button class="searchBtn scan" type="button" id="scanBtn">
-          <span style="display:inline-flex;align-items:center;gap:10px;">
-            <img src="{{ url_for('static', filename='img/icon-qr.png') }}" alt="" style="width:18px;height:18px;object-fit:contain;">
-            Scan QR
-          </span>
-        </button>
+      <div class="search-actions">
+        <button class="btn btn-primary" type="submit">View</button>
+        <button class="btn btn-secondary" type="button" id="scanBtn">Scan QR</button>
       </div>
 
-      <p class="p" style="margin-top:10px;">Try an example: <span class="code">R329QRY8</span></p>
+      <div class="helper">
+        Try an example: <span class="pill">R329QRY8</span>
+      </div>
     </form>
-  </div>
 
-  <div class="pillCenter">
-    <div class="pill">How it works</div>
-  </div>
+    <!-- How it works -->
+    <div class="how">
+      <div class="how-pill">How it works</div>
 
-  <div class="howGrid">
-    <div class="howCard">
-      <img src="{{ url_for('static', filename='img/icon-qr.png') }}" alt="QR">
-      <div class="t">QR built in</div>
-      <div class="d">Each product includes a unique FlameTag QR added by the brand.</div>
+      <div class="features">
+        <div class="feature-card">
+          <img
+            class="feature-icon"
+            src="{{ url_for('static', filename='img/flametag_qr_final.png') }}"
+            alt="QR on lighter"
+          />
+          <div class="feature-text">FlameTag QR added to the product</div>
+        </div>
+
+        <div class="feature-card">
+          <img
+            class="feature-icon"
+            src="{{ url_for('static', filename='img/flametag_message_final.png') }}"
+            alt="Public message"
+          />
+          <div class="feature-text">Scan to see the public message</div>
+        </div>
+
+        <div class="feature-card">
+          <img
+            class="feature-icon"
+            src="{{ url_for('static', filename='img/flametag_lock_final.png') }}"
+            alt="Private message"
+          />
+          <div class="feature-text">Unlock the private message with a PIN</div>
+        </div>
+      </div>
+
+      <div class="footer-note">
+        © FlameTag
+      </div>
     </div>
-
-    <div class="howCard">
-      <img src="{{ url_for('static', filename='img/icon-message.png') }}" alt="Message">
-      <div class="t">Public message</div>
-      <div class="d">Scan to view the message the owner chooses to share.</div>
-    </div>
-
-    <div class="howCard">
-      <img src="{{ url_for('static', filename='img/icon-lock.png') }}" alt="Lock">
-      <div class="t">Private message</div>
-      <div class="d">Owners unlock private details using a PIN.</div>
-    </div>
   </div>
-
 </div>
 
 <script>
-  // View button (code -> /l/CODE)
+  // View button: go to /l/CODE
   document.getElementById("codeForm").addEventListener("submit", function (e) {
     e.preventDefault();
     const raw = document.getElementById("codeInput").value || "";
@@ -72,12 +86,83 @@
     window.location.href = "/l/" + token;
   });
 
-  // Scan QR:
-  // iPhone Safari does NOT reliably support BarcodeDetector camera scanning.
-  // So we do the best "web" option: tell users to use their Camera app.
-  document.getElementById("scanBtn").addEventListener("click", function () {
-    alert("On iPhone, use the Camera app to scan the FlameTag QR. It will open the page automatically.");
-  });
+  // Scan QR button (phone camera) - works only in browsers that support BarcodeDetector
+  const scanBtn = document.getElementById("scanBtn");
+
+  if (scanBtn) {
+    scanBtn.addEventListener("click", async () => {
+      if (!("BarcodeDetector" in window)) {
+        alert("Your browser can’t scan QR here. Use your phone camera to scan the sticker.");
+        return;
+      }
+
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "environment" }
+        });
+
+        const overlay = document.createElement("div");
+        overlay.className = "scan-overlay";
+
+        const video = document.createElement("video");
+        video.className = "scan-video";
+        video.autoplay = true;
+        video.playsInline = true;
+        video.srcObject = stream;
+
+        const tip = document.createElement("div");
+        tip.className = "scan-tip";
+        tip.textContent = "Point your camera at the FlameTag QR…";
+
+        const close = document.createElement("button");
+        close.className = "btn btn-secondary scan-close";
+        close.type = "button";
+        close.textContent = "Close";
+
+        overlay.appendChild(video);
+        overlay.appendChild(tip);
+        overlay.appendChild(close);
+        document.body.appendChild(overlay);
+
+        const detector = new BarcodeDetector({ formats: ["qr_code"] });
+
+        let active = true;
+
+        const stopAll = () => {
+          active = false;
+          stream.getTracks().forEach(t => t.stop());
+          overlay.remove();
+        };
+
+        close.addEventListener("click", stopAll);
+
+        const scanLoop = async () => {
+          if (!active) return;
+
+          try {
+            const barcodes = await detector.detect(video);
+            if (barcodes.length) {
+              const value = (barcodes[0].rawValue || "").trim();
+              stopAll();
+
+              if (value.startsWith("http")) {
+                window.location.href = value;
+              } else {
+                window.location.href = "/l/" + value.replace(/\s+/g, "").toUpperCase();
+              }
+              return;
+            }
+          } catch (e) {}
+
+          requestAnimationFrame(scanLoop);
+        };
+
+        requestAnimationFrame(scanLoop);
+      } catch (err) {
+        alert("Camera access was blocked. Please allow camera access and try again.");
+      }
+    });
+  }
 </script>
 
 {% endblock %}
