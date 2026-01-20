@@ -1,65 +1,61 @@
 {% extends "base.html" %}
 {% block content %}
 
-  <div class="hero">
-    <div class="hero-logo">
-      <img src="{{ url_for('static', filename='img/logo.png') }}" alt="FlameTag">
+<div class="hero">
+
+  <!-- Logo -->
+  <img
+    src="{{ url_for('static', filename='img/logo.png') }}"
+    alt="FlameTag"
+    class="hero-logo"
+  />
+
+  <!-- Search -->
+  <form id="codeForm" class="hero-search" autocomplete="off">
+    <input
+      id="codeInput"
+      type="text"
+      placeholder="Enter code (e.g. R329QRY8)"
+      required
+    />
+
+    <div class="hero-actions">
+      <button class="btn primary" type="submit">View</button>
+      <button class="btn secondary" type="button" id="scanBtn">Scan QR</button>
+    </div>
+  </form>
+
+</div>
+
+<!-- How it works -->
+<div class="how-it-works">
+  <button class="how-btn">How it works</button>
+
+  <div class="how-grid">
+    <div class="how-card">
+      <div class="how-icon">🔥</div>
+      <p>FlameTag QR added to the lighter</p>
     </div>
 
-    <div class="hero-search">
-      <form id="codeForm" class="code-form" autocomplete="off">
-        <input
-          id="codeInput"
-          class="code-input"
-          type="text"
-          placeholder="Enter FlameTag code"
-          maxlength="32"
-          required
-        />
+    <div class="how-card">
+      <div class="how-icon">📱</div>
+      <p>Scan to view the public message</p>
+    </div>
 
-        <div class="btn-row">
-          <button class="btn" type="submit">View</button>
-          <button class="btn secondary" type="button" id="scanBtn">Scan QR</button>
-        </div>
-      </form>
-
-      <div class="hint">
-        Try an example: <span class="code">R329QRY8</span>
-      </div>
+    <div class="how-card">
+      <div class="how-icon">🔒</div>
+      <p>Unlock the private message with a PIN</p>
     </div>
   </div>
+</div>
 
-  <div class="section">
-    <div class="card">
-      <div class="badge">How it works</div>
-      <p class="p" style="margin-top:10px;">
-        FlameTag is built directly into the product by the brand.<br><br>
-        1) Each product includes a unique FlameTag QR<br>
-        2) Scan to view a public message<br>
-        3) Owners can lock a private message with a PIN
-      </p>
-    </div>
-  </div>
-
-  <script>
-    // View button (typed code)
-    document.getElementById("codeForm").addEventListener("submit", function (e) {
-      e.preventDefault();
-      const raw = document.getElementById("codeInput").value || "";
-      const token = raw.trim().replace(/\s+/g, "").toUpperCase();
-      if (!token) return;
-      window.location.href = "/l/" + token;
-    });
-
-    // Scan QR button
-    // (If your scanner logic is already working, keep it.
-    // For now this fallback tells people to use phone camera if needed.)
-    const scanBtn = document.getElementById("scanBtn");
-    if (scanBtn) {
-      scanBtn.addEventListener("click", () => {
-        alert("Use your phone camera to scan the FlameTag QR.");
-      });
-    }
-  </script>
+<script>
+  document.getElementById("codeForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    const token = document.getElementById("codeInput").value.trim().toUpperCase();
+    if (!token) return;
+    window.location.href = "/l/" + token;
+  });
+</script>
 
 {% endblock %}
