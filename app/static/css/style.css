@@ -1,168 +1,121 @@
-{% extends "base.html" %}
-{% block content %}
+:root {
+  --bg: #070910;
+  --card: #121622;
+  --text: #ffffff;
+  --muted: #aab1c6;
+  --accent: #ff6a00;
+}
 
-<div class="page">
-  <div class="hero">
+* {
+  box-sizing: border-box;
+}
 
-    <!-- Big centered logo -->
-    <img
-      class="hero-logo"
-      src="{{ url_for('static', filename='img/logo.png') }}"
-      alt="FlameTag"
-    />
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  background: radial-gradient(circle at bottom, #1a1f3b, #070910 60%);
+  color: var(--text);
+}
 
-    <!-- Search bar -->
-    <form id="codeForm" class="search" autocomplete="off">
-      <input
-        id="codeInput"
-        class="search-input"
-        type="text"
-        placeholder="Enter code (e.g. R329QRY8)"
-        maxlength="32"
-        inputmode="text"
-        autocapitalize="characters"
-        autocomplete="off"
-        required
-      />
-      <span class="search-icon" aria-hidden="true">⌕</span>
+/* ---------- HERO ---------- */
 
-      <div class="search-actions">
-        <button class="btn btn-primary" type="submit">View</button>
-        <button class="btn btn-secondary" type="button" id="scanBtn">Scan QR</button>
-      </div>
+.hero {
+  min-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+}
 
-      <div class="helper">
-        Try an example: <span class="pill">R329QRY8</span>
-      </div>
-    </form>
+.hero-logo {
+  max-width: 220px;
+  width: 70%;
+  margin-bottom: 28px;
+}
 
-    <!-- How it works -->
-    <div class="how">
-      <div class="how-pill">How it works</div>
+.hero-search {
+  width: 100%;
+  max-width: 420px;
+}
 
-      <div class="features">
-        <div class="feature-card">
-          <img
-            class="feature-icon"
-            src="{{ url_for('static', filename='img/flametag_qr_final.png') }}"
-            alt="QR on lighter"
-          />
-          <div class="feature-text">FlameTag QR added to the product</div>
-        </div>
+.hero-search input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.06);
+  color: white;
+  font-size: 16px;
+}
 
-        <div class="feature-card">
-          <img
-            class="feature-icon"
-            src="{{ url_for('static', filename='img/flametag_message_final.png') }}"
-            alt="Public message"
-          />
-          <div class="feature-text">Scan to see the public message</div>
-        </div>
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 14px;
+}
 
-        <div class="feature-card">
-          <img
-            class="feature-icon"
-            src="{{ url_for('static', filename='img/flametag_lock_final.png') }}"
-            alt="Private message"
-          />
-          <div class="feature-text">Unlock the private message with a PIN</div>
-        </div>
-      </div>
+.btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: 14px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+}
 
-      <div class="footer-note">
-        © FlameTag
-      </div>
-    </div>
-  </div>
-</div>
+.btn.primary {
+  background: linear-gradient(180deg, #4c7cff, #2b5cff);
+  color: white;
+}
 
-<script>
-  // View button: go to /l/CODE
-  document.getElementById("codeForm").addEventListener("submit", function (e) {
-    e.preventDefault();
-    const raw = document.getElementById("codeInput").value || "";
-    const token = raw.trim().replace(/\s+/g, "").toUpperCase();
-    if (!token) return;
-    window.location.href = "/l/" + token;
-  });
+.btn.secondary {
+  background: rgba(255,255,255,0.1);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.2);
+}
 
-  // Scan QR button (phone camera) - works only in browsers that support BarcodeDetector
-  const scanBtn = document.getElementById("scanBtn");
+.example {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 14px;
+}
 
-  if (scanBtn) {
-    scanBtn.addEventListener("click", async () => {
-      if (!("BarcodeDetector" in window)) {
-        alert("Your browser can’t scan QR here. Use your phone camera to scan the sticker.");
-        return;
-      }
+.code {
+  background: rgba(255,255,255,0.1);
+  padding: 4px 8px;
+  border-radius: 8px;
+}
 
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: "environment" }
-        });
+/* ---------- HOW IT WORKS ---------- */
 
-        const overlay = document.createElement("div");
-        overlay.className = "scan-overlay";
+.how {
+  padding: 48px 20px 64px;
+  text-align: center;
+}
 
-        const video = document.createElement("video");
-        video.className = "scan-video";
-        video.autoplay = true;
-        video.playsInline = true;
-        video.srcObject = stream;
+.how h2 {
+  margin-bottom: 24px;
+  font-size: 24px;
+}
 
-        const tip = document.createElement("div");
-        tip.className = "scan-tip";
-        tip.textContent = "Point your camera at the FlameTag QR…";
+.how-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+  max-width: 900px;
+  margin: 0 auto;
+}
 
-        const close = document.createElement("button");
-        close.className = "btn btn-secondary scan-close";
-        close.type = "button";
-        close.textContent = "Close";
+.how-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px;
+  padding: 20px;
+}
 
-        overlay.appendChild(video);
-        overlay.appendChild(tip);
-        overlay.appendChild(close);
-        document.body.appendChild(overlay);
-
-        const detector = new BarcodeDetector({ formats: ["qr_code"] });
-
-        let active = true;
-
-        const stopAll = () => {
-          active = false;
-          stream.getTracks().forEach(t => t.stop());
-          overlay.remove();
-        };
-
-        close.addEventListener("click", stopAll);
-
-        const scanLoop = async () => {
-          if (!active) return;
-
-          try {
-            const barcodes = await detector.detect(video);
-            if (barcodes.length) {
-              const value = (barcodes[0].rawValue || "").trim();
-              stopAll();
-
-              if (value.startsWith("http")) {
-                window.location.href = value;
-              } else {
-                window.location.href = "/l/" + value.replace(/\s+/g, "").toUpperCase();
-              }
-              return;
-            }
-          } catch (e) {}
-
-          requestAnimationFrame(scanLoop);
-        };
-
-        requestAnimationFrame(scanLoop);
-      } catch (err) {
-        alert("Camera access was blocked. Please allow camera access and try again.");
-      }
-    });
-  }
-</script>
-
-{% endblock %}
+.icon {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
