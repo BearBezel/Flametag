@@ -1,83 +1,60 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="page">
-  <div class="hero">
+<div class="hero">
 
-    <!-- Big centered logo -->
-    <img
-      class="hero-logo"
-      src="{{ url_for('static', filename='img/logo.png') }}"
-      alt="FlameTag"
+  <!-- Logo -->
+  <img
+    src="{{ url_for('static', filename='img/logo.png') }}"
+    alt="FlameTag"
+    class="hero-logo"
+  />
+
+  <!-- Search -->
+  <form id="codeForm" class="hero-search" autocomplete="off">
+    <input
+      id="codeInput"
+      type="text"
+      placeholder="Enter code (e.g. R329QRY8)"
+      maxlength="32"
+      required
     />
 
-    <!-- Search bar -->
-    <form id="codeForm" class="search" autocomplete="off">
-      <input
-        id="codeInput"
-        class="search-input"
-        type="text"
-        placeholder="Enter code (e.g. R329QRY8)"
-        maxlength="32"
-        inputmode="text"
-        autocapitalize="characters"
-        autocomplete="off"
-        required
-      />
-      <span class="search-icon" aria-hidden="true">⌕</span>
-
-      <div class="search-actions">
-        <button class="btn btn-primary" type="submit">View</button>
-        <button class="btn btn-secondary" type="button" id="scanBtn">Scan QR</button>
-      </div>
-
-      <div class="helper">
-        Try an example: <span class="pill">R329QRY8</span>
-      </div>
-    </form>
-
-    <!-- How it works -->
-    <div class="how">
-      <div class="how-pill">How it works</div>
-
-      <div class="features">
-        <div class="feature-card">
-          <img
-            class="feature-icon"
-            src="{{ url_for('static', filename='img/flametag_qr_final.png') }}"
-            alt="QR on lighter"
-          />
-          <div class="feature-text">FlameTag QR added to the product</div>
-        </div>
-
-        <div class="feature-card">
-          <img
-            class="feature-icon"
-            src="{{ url_for('static', filename='img/flametag_message_final.png') }}"
-            alt="Public message"
-          />
-          <div class="feature-text">Scan to see the public message</div>
-        </div>
-
-        <div class="feature-card">
-          <img
-            class="feature-icon"
-            src="{{ url_for('static', filename='img/flametag_lock_final.png') }}"
-            alt="Private message"
-          />
-          <div class="feature-text">Unlock the private message with a PIN</div>
-        </div>
-      </div>
-
-      <div class="footer-note">
-        © FlameTag
-      </div>
+    <div class="hero-actions">
+      <button class="btn primary" type="submit">View</button>
+      <button class="btn secondary" type="button" id="scanBtn">Scan QR</button>
     </div>
-  </div>
+  </form>
+
+  <p class="example">
+    Try an example: <span class="code">R329QRY8</span>
+  </p>
 </div>
 
+<!-- How it works -->
+<section class="how">
+  <h2>How it works</h2>
+
+  <div class="how-grid">
+    <div class="how-card">
+      <div class="icon">🔖</div>
+      <p>FlameTag QR is added to the product</p>
+    </div>
+
+    <div class="how-card">
+      <div class="icon">📷</div>
+      <p>Scan to see the public message</p>
+    </div>
+
+    <div class="how-card">
+      <div class="icon">🔒</div>
+      <p>Unlock the private message with a PIN</p>
+    </div>
+  </div>
+</section>
+
 <script>
-  // View button: go to /l/CODE
+  // View code
   document.getElementById("codeForm").addEventListener("submit", function (e) {
     e.preventDefault();
     const raw = document.getElementById("codeInput").value || "";
@@ -86,81 +63,11 @@
     window.location.href = "/l/" + token;
   });
 
-  // Scan QR button (phone camera) - works only in browsers that support BarcodeDetector
+  // Scan QR (mobile browsers only)
   const scanBtn = document.getElementById("scanBtn");
-
   if (scanBtn) {
-    scanBtn.addEventListener("click", async () => {
-      if (!("BarcodeDetector" in window)) {
-        alert("Your browser can’t scan QR here. Use your phone camera to scan the sticker.");
-        return;
-      }
-
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: "environment" }
-        });
-
-        const overlay = document.createElement("div");
-        overlay.className = "scan-overlay";
-
-        const video = document.createElement("video");
-        video.className = "scan-video";
-        video.autoplay = true;
-        video.playsInline = true;
-        video.srcObject = stream;
-
-        const tip = document.createElement("div");
-        tip.className = "scan-tip";
-        tip.textContent = "Point your camera at the FlameTag QR…";
-
-        const close = document.createElement("button");
-        close.className = "btn btn-secondary scan-close";
-        close.type = "button";
-        close.textContent = "Close";
-
-        overlay.appendChild(video);
-        overlay.appendChild(tip);
-        overlay.appendChild(close);
-        document.body.appendChild(overlay);
-
-        const detector = new BarcodeDetector({ formats: ["qr_code"] });
-
-        let active = true;
-
-        const stopAll = () => {
-          active = false;
-          stream.getTracks().forEach(t => t.stop());
-          overlay.remove();
-        };
-
-        close.addEventListener("click", stopAll);
-
-        const scanLoop = async () => {
-          if (!active) return;
-
-          try {
-            const barcodes = await detector.detect(video);
-            if (barcodes.length) {
-              const value = (barcodes[0].rawValue || "").trim();
-              stopAll();
-
-              if (value.startsWith("http")) {
-                window.location.href = value;
-              } else {
-                window.location.href = "/l/" + value.replace(/\s+/g, "").toUpperCase();
-              }
-              return;
-            }
-          } catch (e) {}
-
-          requestAnimationFrame(scanLoop);
-        };
-
-        requestAnimationFrame(scanLoop);
-      } catch (err) {
-        alert("Camera access was blocked. Please allow camera access and try again.");
-      }
+    scanBtn.addEventListener("click", () => {
+      alert("Use your phone camera to scan the FlameTag QR.");
     });
   }
 </script>
