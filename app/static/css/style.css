@@ -119,3 +119,54 @@ body {
   font-size: 32px;
   margin-bottom: 10px;
 }
+
+/* --- How it works section --- */
+.how-it-works{
+  margin-top: 42px;
+}
+
+.section-title{
+  font-size: 44px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  margin: 0 0 18px;
+  text-align: center;
+}
+
+.how-grid{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.how-card{
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 18px;
+  padding: 18px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.how-icon{
+  width: 84px;
+  height: 84px;
+  object-fit: contain;
+  display: block;
+  margin: 6px auto 12px;
+  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.35));
+}
+
+.how-text{
+  color: rgba(255,255,255,0.80);
+  font-size: 14px;
+  line-height: 1.35;
+  font-weight: 600;
+}
+
+/* Mobile */
+@media (max-width: 720px){
+  .section-title{ font-size: 34px; }
+  .how-grid{ grid-template-columns: 1fr; }
+  .how-icon{ width: 74px; height: 74px; }
+}
