@@ -1,32 +1,56 @@
 {% extends "base.html" %}
+
 {% block content %}
-  <div class="card">
-    <div class="h1">Admin</div>
-    <p class="p">Optional tools to create or import lighter tokens into the database.</p>
+<div class="page">
+<div class="page-header">
+<h1 class="page-title">Admin</h1>
+<p class="page-subtitle">
 
-    <div class="row">
-      <div class="card">
-        <div class="badge">Generate tokens</div>
-        <form method="post" action="{{ url_for('main.admin_generate') }}">
-          <label>Admin key</label>
-          <input name="admin_key" placeholder="ADMIN_KEY from .env" />
-          <label>How many (max 5000)</label>
-          <input name="how_many" placeholder="e.g. 50" />
-          <button style="margin-top:10px;">Generate</button>
-        </form>
-      </div>
+      Generate new FlameTag codes or import existing ones. This page is private.
+</p>
+</div>
+<div class="panel">
+<div class="panel-title">Generate codes</div>
+<form method="post" action="{{ url_for('main.admin_generate') }}" class="stack">
+<div>
+<label>Admin key</label>
+<input name="admin_key" placeholder="ADMIN_KEY from .env" />
+</div>
+<div>
+<label>How many (max 5000)</label>
+<input name="how_many" placeholder="e.g. 50" />
+</div>
+<div class="btn-row">
+<button class="btn primary" type="submit">Generate</button>
+</div>
+<div class="small-note">
 
-      <div class="card">
-        <div class="badge">Import tokens</div>
-        <form method="post" action="{{ url_for('main.admin_import') }}">
-          <label>Admin key</label>
-          <input name="admin_key" placeholder="ADMIN_KEY from .env" />
-          <label>Tokens (one per line)</label>
-          <textarea name="tokens" placeholder="AB12CD34&#10;EF56GH78"></textarea>
-          <button style="margin-top:10px;">Import</button>
-          <p class="p" style="margin-top:10px;">Use this to import the codes you engraved/printed.</p>
-        </form>
-      </div>
-    </div>
-  </div>
+        Generates unique FlameTag codes in your database.
+</div>
+</form>
+</div>
+<div class="panel">
+<div class="panel-title">Import codes</div>
+<form method="post" action="{{ url_for('main.admin_import') }}" class="stack">
+<div>
+<label>Admin key</label>
+<input name="admin_key" placeholder="ADMIN_KEY from .env" />
+</div>
+<div>
+<label>Tokens (one per line)</label>
+<textarea name="tokens" placeholder="AB12CD34&#10;EF56GH78"></textarea>
+</div>
+<div class="btn-row">
+<button class="btn primary" type="submit">Import</button>
+<a class="btn secondary" href="{{ url_for('main.home') }}">Back home</a>
+</div>
+<div class="small-note">
+
+        Use this if you already printed/engraved codes and want to load them into FlameTag.
+</div>
+</form>
+</div>
+</div>
+
 {% endblock %}
+ 
