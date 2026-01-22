@@ -9,6 +9,15 @@
 </head>
 
 <body>
+
+  <!-- Optional top brand bar (keeps everything feeling consistent) -->
+  <div class="topbar">
+    <a href="{{ url_for('main.home') }}" class="topbar-brand" aria-label="FlameTag home">
+      <img src="{{ url_for('static', filename='img/logo.png') }}" alt="FlameTag" class="topbar-logo">
+    </a>
+  </div>
+
+  <!-- Flash messages -->
   {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
       <div class="flash-wrap">
@@ -19,6 +28,10 @@
     {% endif %}
   {% endwith %}
 
-  {% block content %}{% endblock %}
+  <!-- Page content -->
+  <main class="app">
+    {% block content %}{% endblock %}
+  </main>
+
 </body>
-</html>       
+</html>
