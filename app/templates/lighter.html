@@ -38,6 +38,23 @@
         </div>
       </div>
 
+     <div class="card">
+        <div class="badge">Found this lighter?</div>
+        <p class="p" style="margin-top:10px;">
+          Leave a quick note for the owner (where you found it / how to reach you).
+        </p>
+
+        <form method="post" action="{{ url_for('main.found_lighter', token=lighter.token) }}">
+          <label>Your note</label>
+          <textarea
+            name="found_note"
+            placeholder="e.g., Found at Shoreditch station. Text me on 07…"
+            required
+          ></textarea>
+
+          <button style="margin-top:10px;">Send note</button>
+        </form>
+      </div>
     {% else %}
       <div class="card">
         <div class="badge">Tag this lighter</div>
