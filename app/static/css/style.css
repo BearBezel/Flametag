@@ -394,3 +394,44 @@ textarea{
 
 }
  
+/* ---------- Forms (shared) ---------- */
+input, textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  font-size: 16px;
+  outline: none;
+}
+
+textarea { min-height: 110px; resize: vertical; }
+
+label{
+  display:block;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.55);
+  margin: 6px 0 8px;
+}
+
+/* ---------- Grid row helper ---------- */
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+@media (max-width: 720px){
+  .row { grid-template-columns: 1fr; }
+}
+
+/* ---------- Small buttons row (Back etc.) ---------- */
+.btn.small{
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  flex: 0 0 auto;
+}
