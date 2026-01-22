@@ -74,6 +74,20 @@ def edit_lighter(token):
         flash("Claim it first.", "err")
         return redirect(url_for("main.lighter_page", token=token))
 
+    @bp.post("/l/<token>/found")
+def found_lighter(token):
+   lighter = get_or_404(token)
+   note = (request.form.get("found_note") or "").strip()
+   if not note:
+       flash("Please add a short note (where you found it).", "err")
+       return redirect(url_for("main.lighter_page", token=token))
+   lighter.found_at = datetime.utcnow()
+   lighter.found_note = note
+   lighter.updated_at = datetime.utcnow()
+   db.session.commit()
+   flash("Thanks — your message has been saved for the owner.", "ok")
+   return redirect(url_for("main.lighter_page", token=token))
+
     pin = (request.form.get("pin") or "").strip()
     if not pin or not lighter.owner_pin_hash or not check_password_hash(lighter.owner_pin_hash, pin):
         flash("Wrong owner PIN.", "err")
