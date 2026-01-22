@@ -35,6 +35,132 @@ body {
   margin-bottom: 32px;
 }
 
+/* ---------- Shared page layout (Admin + Lock pages) ---------- */
+
+.page {
+
+  max-width: 760px;
+
+  margin: 0 auto;
+
+  padding: 24px 18px 60px;
+
+}
+
+.page-header {
+
+  text-align: center;
+
+  margin: 14px 0 22px;
+
+}
+
+.page-title {
+
+  font-size: 34px;
+
+  line-height: 1.05;
+
+  margin: 0;
+
+  font-weight: 800;
+
+  letter-spacing: -0.02em;
+
+}
+
+.page-subtitle {
+
+  margin: 10px auto 0;
+
+  max-width: 520px;
+
+  color: rgba(255,255,255,0.72);
+
+  font-size: 15px;
+
+  line-height: 1.5;
+
+}
+
+.panel {
+
+  background: rgba(255,255,255,0.06);
+
+  border: 1px solid rgba(255,255,255,0.10);
+
+  border-radius: 22px;
+
+  padding: 18px;
+
+  box-shadow: 0 18px 60px rgba(0,0,0,0.35);
+
+  backdrop-filter: blur(10px);
+
+}
+
+.panel + .panel {
+
+  margin-top: 14px;
+
+}
+
+.section-title {
+
+  font-size: 14px;
+
+  letter-spacing: 0.08em;
+
+  text-transform: uppercase;
+
+  color: rgba(255,255,255,0.55);
+
+  margin: 0 0 12px;
+
+}
+
+.stack {
+
+  display: grid;
+
+  gap: 12px;
+
+}
+
+.btn-row {
+
+  display: flex;
+
+  gap: 10px;
+
+  flex-wrap: wrap;
+
+  margin-top: 10px;
+
+}
+
+.btn.secondary {
+
+  background: rgba(255,255,255,0.10);
+
+  color: rgba(255,255,255,0.92);
+
+  border: 1px solid rgba(255,255,255,0.16);
+
+}
+
+.small-note {
+
+  font-size: 12px;
+
+  color: rgba(255,255,255,0.55);
+
+  margin-top: 10px;
+
+  line-height: 1.45;
+
+}
+ 
 .hero-search {
   width: 100%;
   max-width: 420px;
