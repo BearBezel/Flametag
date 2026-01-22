@@ -14,6 +14,8 @@ class Lighter(db.Model):
     private_message = db.Column(db.Text, nullable=True)
 
     scan_count = db.Column(db.Integer, nullable=False, default=0)
+    found_at = db.Column(db.DateTime, nullable=True)
+found_note = db.Column(db.Text, nullable=True)
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     def is_claimed(self) -> bool:
