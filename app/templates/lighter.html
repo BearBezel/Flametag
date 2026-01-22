@@ -1,77 +1,147 @@
 {% extends "base.html" %}
 {% block content %}
-  <div class="card">
+
+<div class="page">
+
+  <div class="page-header">
     <div class="badge">Lighter ID: <span class="code">{{ lighter.token }}</span></div>
-    <div class="h1" style="margin-top:10px;">
-      {% if lighter.is_claimed() %}This lighter is tagged.{% else %}Untagged lighter.{% endif %}
+
+    <h1 class="page-title" style="margin-top:14px;">
+      {% if lighter.is_claimed() %}
+        This lighter is tagged
+      {% else %}
+        Untagged lighter
+      {% endif %}
+    </h1>
+
+    <p class="page-subtitle">
+      Scans: {{ lighter.scan_count }}
+      {% if lighter.found_at %}
+        • Marked found
+      {% endif %}
+    </p>
+  </div>
+
+  {% if lighter.is_claimed() %}
+
+    <!-- Public message -->
+    <div class="panel">
+      <div class="section-title">Public message</div>
+      <p style="margin:0; font-size:18px; line-height:1.5; color:rgba(255,255,255,0.92);">
+        {{ lighter.public_message }}
+      </p>
     </div>
-    <p class="p">Scans: {{ lighter.scan_count }}</p>
 
-    {% if lighter.is_claimed() %}
-      <div class="card">
-        <div class="badge">Public message</div>
-        <p class="p" style="font-size:18px;margin-top:10px;">{{ lighter.public_message }}</p>
-      </div>
+    <div class="row">
 
-      <div class="row">
-        <div class="card">
-          <div class="badge">Unlock private message</div>
-          <form method="post" action="{{ url_for('main.unlock_private', token=lighter.token) }}">
+      <!-- Unlock -->
+      <div class="panel">
+        <div class="section-title">Unlock private message</div>
+        <form method="post" action="{{ url_for('main.unlock_private', token=lighter.token) }}" class="stack">
+          <div>
             <label>PIN</label>
             <input name="pin" placeholder="Enter PIN" />
-            <button style="margin-top:10px;">Unlock</button>
-            <p class="p" style="margin-top:10px;">If you’ve got it… you know what to do 😭🔥</p>
-          </form>
-        </div>
+          </div>
 
-        <div class="card">
-          <div class="badge">Owner edit</div>
-          <form method="post" action="{{ url_for('main.edit_lighter', token=lighter.token) }}">
+          <div class="btn-row">
+            <button class="btn primary" type="submit">Unlock</button>
+            <a class="btn secondary" href="{{ url_for('main.home') }}" style="text-align:center; line-height: 44px; text-decoration:none;">Home</a>
+          </div>
+
+          <div class="small-note">
+            Only the owner’s PIN can unlock the private message.
+          </div>
+        </form>
+      </div>
+
+      <!-- Owner edit -->
+      <div class="panel">
+        <div class="section-title">Owner edit</div>
+        <form method="post" action="{{ url_for('main.edit_lighter', token=lighter.token) }}" class="stack">
+          <div>
             <label>Owner PIN</label>
             <input name="pin" placeholder="Owner PIN" />
-            <label>Public message (optional)</label>
-            <textarea name="public_message" placeholder="e.g., If you kept this, you owe me a new one 😂"></textarea>
-            <label>Private message (optional)</label>
+          </div>
+
+          <div>
+            <label>Public message</label>
+            <textarea name="public_message" placeholder="e.g., Please return — thank you 🙏"></textarea>
+          </div>
+
+          <div>
+            <label>Private message</label>
             <textarea name="private_message" placeholder="e.g., Return to Samuel — DM @____"></textarea>
-            <button style="margin-top:10px;">Update</button>
-          </form>
+          </div>
+
+          <button class="btn primary" type="submit">Update</button>
+
+          <div class="small-note">
+            Tip: keep the public message short. Put contact details in the private message.
+          </div>
+        </form>
+      </div>
+
+    </div>
+
+    <!-- Found note -->
+    <div class="panel">
+      <div class="section-title">Found this lighter?</div>
+
+      {% if lighter.found_at and lighter.found_note %}
+        <div class="small-note" style="margin-bottom:12px;">
+          A note was already left for the owner.
         </div>
-      </div>
+        <div style="padding:14px 16px; border-radius:16px; border:1px solid rgba(255,255,255,0.12); background: rgba(0,0,0,0.18);">
+          <div class="small-note" style="margin:0 0 6px;">Note</div>
+          <div style="color: rgba(255,255,255,0.92); white-space: pre-wrap;">{{ lighter.found_note }}</div>
+        </div>
+      {% endif %}
 
-     <div class="card">
-        <div class="badge">Found this lighter?</div>
-        <p class="p" style="margin-top:10px;">
-          Leave a quick note for the owner (where you found it / how to reach you).
-        </p>
-
-        <form method="post" action="{{ url_for('main.found_lighter', token=lighter.token) }}">
+      <form method="post" action="{{ url_for('main.found_lighter', token=lighter.token) }}" class="stack" style="margin-top:14px;">
+        <div>
           <label>Your note</label>
-          <textarea
-            name="found_note"
-            placeholder="e.g., Found at Shoreditch station. Text me on 07…"
-            required
-          ></textarea>
+          <textarea name="found_note" placeholder="e.g., Found at Shoreditch station. Text me on 07…" required></textarea>
+        </div>
 
-          <button style="margin-top:10px;">Send note</button>
-        </form>
-      </div>
-    {% else %}
-      <div class="card">
-        <div class="badge">Tag this lighter</div>
-        <p class="p">Set your messages and a PIN. Anyone can see the public message. Only the PIN unlocks the private one.</p>
-        <form method="post" action="{{ url_for('main.claim_lighter', token=lighter.token) }}">
+        <button class="btn secondary" type="submit">Send note</button>
+
+        <div class="small-note">
+          This doesn’t unlock anything — it only saves a message for the owner to see.
+        </div>
+      </form>
+    </div>
+
+  {% else %}
+
+    <!-- Claim -->
+    <div class="panel">
+      <div class="section-title">Tag this lighter</div>
+      <p class="page-subtitle" style="margin-top:0;">
+        Set a public message and a private message. The private message is locked with your PIN.
+      </p>
+
+      <form method="post" action="{{ url_for('main.claim_lighter', token=lighter.token) }}" class="stack">
+        <div>
           <label>Public message</label>
-          <textarea name="public_message" placeholder="e.g., Samuel’s lighter — stop stealing it 😭🔥"></textarea>
+          <textarea name="public_message" placeholder="e.g., This lighter is owned — please return 🙏"></textarea>
+        </div>
 
-          <label>Private message (locked)</label>
-          <textarea name="private_message" placeholder="e.g., If found, call/text me on …"></textarea>
+        <div>
+          <label>Private message</label>
+          <textarea name="private_message" placeholder="e.g., Return to Samuel — DM @____"></textarea>
+        </div>
 
-          <label>Choose a PIN (min 4 chars)</label>
+        <div>
+          <label>Create a PIN (min 4)</label>
           <input name="pin" placeholder="Create a PIN" />
+        </div>
 
-          <button style="margin-top:10px;">Tag it</button>
-        </form>
-      </div>
-    {% endif %}
-  </div>
+        <button class="btn primary" type="submit">Tag it</button>
+      </form>
+    </div>
+
+  {% endif %}
+
+</div>
+
 {% endblock %}
