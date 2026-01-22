@@ -71,8 +71,24 @@ def unlock_private(token):
 
     flash("Unlocked.", "ok")
     return render_template("unlocked.html", lighter=lighter)
+    
+@bp.post("/l/<token>/found")
+def found_lighter(token):
+    lighter = get_or_404(token)
 
+    note = (request.form.get("found_note") or "").strip()
+    if not note:
+        flash("Please add a short note (where you found it).", "err")
+        return redirect(url_for("main.lighter_page", token=token))
 
+    lighter.found_at = datetime.utcnow()
+    lighter.found_note = note
+    lighter.updated_at = datetime.utcnow()
+
+    db.session.commit()
+    flash("Thanks — your message has been saved for the owner.", "ok")
+    return redirect(url_for("main.lighter_page", token=token))
+    
 @bp.post("/l/<token>/edit")
 def edit_lighter(token):
     lighter = get_or_404(token)
@@ -97,25 +113,6 @@ def edit_lighter(token):
     db.session.commit()
     flash("Updated.", "ok")
     return redirect(url_for("main.lighter_page", token=token))
-
-
-@bp.post("/l/<token>/found")
-def found_lighter(token):
-    lighter = get_or_404(token)
-
-    note = (request.form.get("found_note") or "").strip()
-    if not note:
-        flash("Please add a short note (where you found it).", "err")
-        return redirect(url_for("main.lighter_page", token=token))
-
-    lighter.found_at = datetime.utcnow()
-    lighter.found_note = note
-    lighter.updated_at = datetime.utcnow()
-    db.session.commit()
-
-    flash("Thanks — your message has been saved for the owner.", "ok")
-    return redirect(url_for("main.lighter_page", token=token))
-
 
 # --- Admin helpers (optional) ---
 
