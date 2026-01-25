@@ -169,3 +169,29 @@ def admin_import():
     db.session.commit()
     flash(f"Imported {created} tokens.", "ok")
     return redirect(url_for("main.admin"))
+
+import qrcode
+from io import BytesIO
+from flask import send_file
+
+@bp.get("/qr/<token>")
+def qr_code(token):
+    get_or_404(token)
+
+    url = f"https://flametag.app/l/{token}"
+
+    qr = qrcode.QRCode(
+        version=1,
+        box_size=10,
+        border=2
+    )
+    qr.add_data(url)
+    qr.make(fit=True)
+
+    img = qr.make_image(fill_color="white", back_color="black")
+
+    buf = BytesIO()
+    img.save(buf, format="PNG")
+    buf.seek(0)
+
+    return send_file(buf, mimetype="image/png")
