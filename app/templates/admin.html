@@ -52,5 +52,26 @@
 </div>
 </div>
 
+{% if created %}
+<div class="panel">
+  <div class="panel-title">Recently generated codes</div>
+
+  <div class="stack">
+    {% for token in created %}
+      <div style="display:flex; align-items:center; justify-content:space-between;">
+        <span class="code">{{ token }}</span>
+
+        <a href="{{ url_for('main.qr_code', token=token) }}" target="_blank">
+          <button class="btn secondary">QR</button>
+        </a>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="small-note">
+    Click QR to download a printable black-background FlameTag QR code.
+  </div>
+</div>
+{% endif %}
 {% endblock %}
  
