@@ -1,4 +1,4 @@
-import os
+ import os
 import secrets
 from datetime import datetime
 from flask import Blueprint, render_template, request, redirect, url_for, flash, abort
@@ -179,7 +179,7 @@ from .models import FlameTag
 def qr_code(token):
     FlameTag.query.filter_by(token=token).first_or_404() 
     url = f"https://flametag.app/l/{token}"
-   qr = qrcode.QRCode(
+    qr = qrcode.QRCode(
        version=1,
        box_size=10,
        border=2
