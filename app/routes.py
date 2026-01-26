@@ -177,7 +177,7 @@ from .models import FlameTag
 
 @bp.get("/qr/<token>")
 def qr_code(token):
-   FlameTag.query.filter_by(token=token).first_or_404()
+FlameTag.query.filter_by(token=token).first_or_404()
    url = f"https://flametag.app/l/{token}"
    qr = qrcode.QRCode(
        version=1,
