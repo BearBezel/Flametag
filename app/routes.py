@@ -173,21 +173,26 @@ def admin_import():
 import qrcode
 from io import BytesIO
 from flask import send_file
-from .models import FlameTag
+from .models import Lighter
 
 @bp.get("/qr/<token>")
 def qr_code(token):
-   FlameTag.query.filter_by(token=token).first_or_404() 
-   url = f"https://flametag.app/l/{token}"
-   qr = qrcode.QRCode(
-   version=1,
-   box_size=10,
-   border=2
-   )
-   qr.add_data(url)
-   qr.make(fit=True)
-   img = qr.make_image(fill_color="white", back_color="black")
-   buf = BytesIO()
-   img.save(buf, format="PNG")
-   buf.seek(0)
-   return send_file(buf, mimetype="image/png")
+    lighter = Lighter.query.filter_by(token=token).first_or_404()
+
+    url = f"https://flametag.app/l/{lighter.token}"
+
+    qr = qrcode.QRCode(
+        version=1,
+        box_size=10,
+        border=2
+    )
+    qr.add_data(url)
+    qr.make(fit=True)
+
+    img = qr.make_image(fill_color="white", back_color="black")
+
+    buf = BytesIO()
+    img.save(buf, format="PNG")
+    buf.seek(0)
+
+    return send_file(buf, mimetype="image/png")
