@@ -175,7 +175,7 @@ from io import BytesIO
 from flask import send_file
 from .models import Lighter
 
-@bp.get("/qr/,<token>")
+@bp.get("/qr/<token>")
 def qr_code(token):
     lighter=Lighter.query.filter_by(token=token).first_or_404
     
