@@ -177,7 +177,7 @@ from .models import Lighter
 
 @bp.get("/qr/<token>")
 def qr_code(token):
-    lighter=Lighter.query.filter_by(token=token).first_or_404
+    lighter=Lighter.query.filter_by(token=token).first_or_404()
     
     url = f"https://flametag.app/1/{token}"
     
@@ -195,4 +195,4 @@ def qr_code(token):
     img.save(buf,format="PNG")
     buf.seek(0)
     
-    return send-file(buf,mimetype="image/png")
+    return send_file(buf,mimetype="image/png")
