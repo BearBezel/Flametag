@@ -176,7 +176,7 @@ from flask import send_file
 from .models import Lighter
 
 @bp.get("/qr/,<token>")
-def qr-code(token):
+def qr_code(token):
     lighter=Lighter.query.filter-by(token=token).first-or-404
     url=f"https://flametag.app/1/{token}"
     qr=qrcode.QRCode(
@@ -191,4 +191,3 @@ def qr-code(token):
     img.save(buf,format="PNG")
     buf.seek(0)
     return send-file(buf,mimetype="image/png")
-
