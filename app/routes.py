@@ -118,7 +118,8 @@ def edit_lighter(token):
 
 @bp.get("/admin")
 def admin():
-    return render_template("admin.html")
+    lighters = Lighter.query.order_by(Lighter.id.desc()).limit(50).all()
+    return render_template("admin.html", lighters=lighters)
 
 
 @bp.post("/admin/generate")
