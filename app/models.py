@@ -16,15 +16,18 @@ class Lighter(db.Model):
 
     scan_count = db.Column(db.Integer, nullable=False, default=0)
 
-    # You can keep these if you want, but once we switch to FoundNote history
-    # they won’t be needed anymore. (We can remove later safely.)
+    # (Old single-note fields. You can keep for now; history uses FoundNote below)
     found_at = db.Column(db.DateTime, nullable=True)
     found_note = db.Column(db.Text, nullable=True)
 
-    updated_at = db.Column(
-        db.DateTime,
-        nullable=False,
-        default=datetime.utcnow
+    updated_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    # This is the history list (many notes)
+    found_notes = db.relationship(
+        "FoundNote",
+        backref="lighter",
+        lazy=True,
+        cascade="all, delete-orphan"
     )
 
     def is_claimed(self) -> bool:
@@ -44,11 +47,4 @@ class FoundNote(db.Model):
 
     message = db.Column(db.Text, nullable=False)
 
-    created_at = db.Column(
-        db.DateTime,
-        nullable=False,
-        default=datetime.utcnow
-    )
-
-    # Allows: lighter.found_notes (list of notes)
-    lighter = db.relationship("Lighter", backref="found_notes")
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
