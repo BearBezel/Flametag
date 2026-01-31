@@ -8,7 +8,10 @@ db = SQLAlchemy()
 def create_app():
     load_dotenv()
     app = Flask(__name__)
-    app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "dev-secret")
+    
+    app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "dev-secret-change-me")
+    app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+    
     db_url = os.getenv("DATABASE_URL", "sqlite:///lighterlock.db")
     app.config["SQLALCHEMY_DATABASE_URI"] = db_url
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
