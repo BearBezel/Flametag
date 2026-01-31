@@ -462,14 +462,14 @@ label{
 }
 
 .topbar-logo{
-  height: 34px;
+  height: 72px;
   width: auto;
   display: block;
-  opacity: 0.95;
+  opacity: 1;
 }
 
 @media (max-width: 480px){
-  .topbar-logo{ height: 38px;
+  .topbar-logo{ height: 96px;
  }
 }
 
