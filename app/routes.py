@@ -8,7 +8,13 @@ from .models import Lighter
 
 bp = Blueprint("main", __name__)
 
+def admin_authed() -> bool:
+    admin_key = os.getenv("ADMIN_KEY", "")
+    return bool(admin_key) and session.get("is_admin") is True
 
+def require_admin():
+    if not admin_authed():
+        abort(404)
 def get_or_404(token: str) -> Lighter:
     lighter = Lighter.query.filter_by(token=token).first()
     if not lighter:
@@ -117,12 +123,29 @@ def edit_lighter(token):
 
 @bp.get("/admin")
 def admin():
+    if not admin_authed():
+        return render_template("admin_login.html")
+
     lighters = Lighter.query.order_by(Lighter.id.desc()).limit(50).all()
     return render_template("admin.html", lighters=lighters)
+    
+@bp.post("/admin/login")
+def admin_login():
+    admin_key = os.getenv("ADMIN_KEY", "")
+    key = (request.form.get("admin_key") or "").strip()
 
+    if not admin_key or key != admin_key:
+        flash("Invalid admin key.", "err")
+        return redirect(url_for("main.admin"))
 
+    session["is_admin"] = True
+    flash("Admin access granted.", "ok")
+    return redirect(url_for("main.admin"))
+    
 @bp.post("/admin/generate")
 def admin_generate():
+    require_admin()
+    
     admin_key = os.getenv("ADMIN_KEY", "")
     key = (request.form.get("admin_key") or "").strip()
     if not admin_key or key != admin_key:
@@ -148,6 +171,8 @@ def admin_generate():
 
 @bp.post("/admin/import")
 def admin_import():
+    require_admin()
+    
     admin_key = os.getenv("ADMIN_KEY", "")
     key = (request.form.get("admin_key") or "").strip()
     if not admin_key or key != admin_key:
