@@ -24,7 +24,7 @@ def get_or_404(token: str) -> Lighter:
 
 @bp.get("/")
 def home():
-    return render_template("home.html")
+    return render_template("home.html", hide_topbar=True)
 
 
 @bp.get("/l/<token>")
