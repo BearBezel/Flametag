@@ -36,7 +36,23 @@
           <button class="btn primary" type="submit">Unlock private message</button>
           <div class="small-note">Only the owner PIN can unlock the private message.</div>
         </form>
-      </div>
+        {% if show_private %}
+  <div class="panel" style="margin-top:14px;">
+    <div class="section-title">Owner private message</div>
+    <div class="big-message">{{ lighter.private_message }}</div>
+  </div>
+
+  {% if lighter.found_note %}
+    <div class="panel" style="margin-top:14px;">
+      <div class="section-title">Found note</div>
+      <div class="big-message">{{ lighter.found_note }}</div>
+      {% if lighter.found_at %}
+        <div class="small-note" style="margin-top:10px;">
+          Received: {{ lighter.found_at }}
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
 
       <!-- TAB: Owner edit -->
       <div class="tab-panel hidden" id="tab-edit">
