@@ -70,8 +70,8 @@ def unlock_private(token):
         return redirect(url_for("main.lighter_page", token=token))
 
     flash("Unlocked.", "ok")
-    return render_template("unlocked.html", lighter=lighter)
-    
+    return render_template("lighter.html", lighter=lighter, show_private=True)
+
 @bp.post("/l/<token>/found")
 def found_lighter(token):
     lighter = get_or_404(token)
