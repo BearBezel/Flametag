@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page">
+  <div class="page-header">
+    <h1 class="page-title">Admin</h1>
+    <p class="page-subtitle">Enter your admin key to access the admin panel.</p>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Admin login</div>
+
+    <form method="post" action="{{ url_for('main.admin_login') }}" class="stack">
+      <label>Admin key</label>
+      <input name="admin_key" placeholder="ADMIN_KEY from Render env" />
+
+      <div class="btn-row">
+        <button class="btn primary" type="submit">Unlock</button>
+        <a class="btn secondary" href="{{ url_for('main.home') }}">Back home</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
