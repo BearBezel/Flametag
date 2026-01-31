@@ -12,13 +12,34 @@
 
   {% if lighter.is_claimed() %}
 
-    <!-- ONE main message card -->
+    <!-- Public message -->
     <div class="panel">
       <div class="section-title">Public message</div>
       <div class="big-message">{{ lighter.public_message }}</div>
     </div>
 
-    <!-- ONE actions card (switches content inside) -->
+    <!-- Owner private message (only when unlocked) -->
+    {% if show_private %}
+      <div class="panel" style="margin-top:14px;">
+        <div class="section-title">Owner private message</div>
+        <div class="big-message">{{ lighter.private_message }}</div>
+      </div>
+    {% endif %}
+
+    <!-- Found note (owner can see this once claimed) -->
+    {% if lighter.found_note %}
+      <div class="panel" style="margin-top:14px;">
+        <div class="section-title">Found note</div>
+        <div class="big-message">{{ lighter.found_note }}</div>
+        {% if lighter.found_at %}
+          <div class="small-note" style="margin-top:10px;">
+            Received: {{ lighter.found_at }}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <!-- Actions -->
     <div class="panel">
       <div class="section-title">Actions</div>
 
@@ -36,23 +57,7 @@
           <button class="btn primary" type="submit">Unlock private message</button>
           <div class="small-note">Only the owner PIN can unlock the private message.</div>
         </form>
-        {% if show_private %}
-  <div class="panel" style="margin-top:14px;">
-    <div class="section-title">Owner private message</div>
-    <div class="big-message">{{ lighter.private_message }}</div>
-  </div>
-
-  {% if lighter.found_note %}
-    <div class="panel" style="margin-top:14px;">
-      <div class="section-title">Found note</div>
-      <div class="big-message">{{ lighter.found_note }}</div>
-      {% if lighter.found_at %}
-        <div class="small-note" style="margin-top:10px;">
-          Received: {{ lighter.found_at }}
-        </div>
-      {% endif %}
-    </div>
-  {% endif %}
+      </div>
 
       <!-- TAB: Owner edit -->
       <div class="tab-panel hidden" id="tab-edit">
@@ -61,10 +66,10 @@
           <input name="pin" placeholder="Owner PIN" />
 
           <label>Public message</label>
-          <textarea name="public_message" placeholder="E.g., This belongs to Samuel — please return it."></textarea>
+          <textarea name="public_message">{{ lighter.public_message }}</textarea>
 
           <label>Private message</label>
-          <textarea name="private_message" placeholder="E.g., Text/DM me on…"></textarea>
+          <textarea name="private_message">{{ lighter.private_message }}</textarea>
 
           <button class="btn primary" type="submit">Save changes</button>
         </form>
@@ -74,9 +79,9 @@
       <div class="tab-panel hidden" id="tab-found">
         <form method="post" action="{{ url_for('main.found_lighter', token=lighter.token) }}" class="stack">
           <label>Your note to the owner</label>
-          <textarea name="found_note" placeholder="Found at Shoreditch station. Contact me on 07…" required></textarea>
+          <textarea name="found_note" required placeholder="Found at Shoreditch station. Contact me on…"></textarea>
           <button class="btn secondary" type="submit">Send note</button>
-          <div class="small-note">Your note is saved for the owner to see later.</div>
+          <div class="small-note">Your note is saved for the owner to see.</div>
         </form>
       </div>
 
@@ -87,29 +92,29 @@
     <!-- Not claimed yet -->
     <div class="panel">
       <div class="section-title">Tag this lighter</div>
-      <p class="page-subtitle" style="margin:0 0 14px;">
-        Set your public + private message and a PIN. Anyone can see the public message. Only the PIN unlocks the private one.
+      <p class="page-subtitle">
+        Set your public + private message and a PIN.
       </p>
 
       <form method="post" action="{{ url_for('main.claim_lighter', token=lighter.token) }}" class="stack">
         <label>Public message</label>
-        <textarea name="public_message" placeholder="E.g., This belongs to Samuel — please return it."></textarea>
+        <textarea name="public_message"></textarea>
 
-        <label>Private message (locked)</label>
-        <textarea name="private_message" placeholder="E.g., Call/text me on…"></textarea>
+        <label>Private message</label>
+        <textarea name="private_message"></textarea>
 
         <label>Choose a PIN (min 4 chars)</label>
-        <input name="pin" placeholder="Create a PIN" />
+        <input name="pin" />
 
         <button class="btn primary" type="submit">Tag it</button>
       </form>
     </div>
 
   {% endif %}
+
 </div>
 
 <script>
-  // Tab switching (keeps page clean on mobile)
   const btns = document.querySelectorAll(".tab-btn");
   const panels = {
     unlock: document.getElementById("tab-unlock"),
