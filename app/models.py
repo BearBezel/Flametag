@@ -24,6 +24,32 @@ class Lighter(db.Model):
         nullable=False,
         default=datetime.utcnow
     )
+    
+      found_notes = db.relationship(
+        "FoundNote",
+        backref="lighter",
+        cascade="all, delete-orphan",
+        lazy="dynamic",
+    )
 
     def is_claimed(self) -> bool:
         return self.claimed_at is not None
+
+class FoundNote(db.Model):
+    __tablename__ = "found_notes"
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    lighter_id = db.Column(
+        db.Integer,
+        db.ForeignKey("lighters.id"),
+        nullable=False,
+        index=True,
+    )
+
+    note = db.Column(db.Text, nullable=False)
+    created_at = db.Column(
+        db.DateTime,
+        nullable=False,
+        default=datetime.utcnow
+    )
