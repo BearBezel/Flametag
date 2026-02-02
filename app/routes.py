@@ -4,7 +4,7 @@ from datetime import datetime
 from flask import Blueprint, render_template, request, redirect, url_for, flash, abort, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
-from .models import Lighter
+from .models import Lighter, FoundNote
 
 bp = Blueprint("main", __name__)
 
@@ -90,9 +90,12 @@ def found_lighter(token):
     lighter.found_note = note
     lighter.updated_at = datetime.utcnow()
 
+    db.session.add(FoundNote(lighter_id=lighter.id, note=note))
     db.session.commit()
+
     flash("Thanks — your message has been saved for the owner.", "ok")
     return redirect(url_for("main.lighter_page", token=token))
+
     
 @bp.post("/l/<token>/edit")
 def edit_lighter(token):
