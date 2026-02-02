@@ -3,42 +3,49 @@ from . import db
 
 
 class Lighter(db.Model):
-    __tablename__ = "lighters"
+    __tablename__ = "lighters"
 
-    id = db.Column(db.Integer, primary_key=True)
-    token = db.Column(db.String(32), unique=True, index=True, nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    token = db.Column(db.String(32), unique=True, index=True, nullable=False)
 
-    claimed_at = db.Column(db.DateTime, nullable=True)
-    owner_pin_hash = db.Column(db.String(255), nullable=True)
+    claimed_at = db.Column(db.DateTime, nullable=True)
+    owner_pin_hash = db.Column(db.String(255), nullable=True)
 
-    public_message = db.Column(db.Text, nullable=True)
-    private_message = db.Column(db.Text, nullable=True)
+    public_message = db.Column(db.Text, nullable=True)
+    private_message = db.Column(db.Text, nullable=True)
 
-    scan_count = db.Column(db.Integer, nullable=False, default=0)
+    scan_count = db.Column(db.Integer, nullable=False, default=0)
 
-    # old single-note fields (safe to keep for now)
-    found_at = db.Column(db.DateTime, nullable=True)
-    found_note = db.Column(db.Text, nullable=True)
+    # Keep these as "latest found message" (optional, but useful)
+    found_at = db.Column(db.DateTime, nullable=True)
+    found_note = db.Column(db.Text, nullable=True)
 
-    updated_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
-    # history list (many notes)
-    found_notes = db.relationship(
-        "FoundNote",
-        backref="lighter",
-        lazy=True,
-        cascade="all, delete-orphan",
-    )
+    # NEW: relationship to multiple found notes
+    found_notes = db.relationship(
+        "FoundNote",
+        backref="lighter",
+        lazy=True,
+        cascade="all, delete-orphan",
+        order_by="desc(FoundNote.created_at)"
+    )
 
-    def is_claimed(self) -> bool:
-        return self.claimed_at is not None
+    def is_claimed(self) -> bool:
+        return self.claimed_at is not None
 
 
 class FoundNote(db.Model):
-    __tablename__ = "found_notes"
+    __tablename__ = "found_notes"
 
-    id = db.Column(db.Integer, primary_key=True)
-    lighter_id = db.Column(db.Integer, db.ForeignKey("lighters.id"), nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
 
-    message = db.Column(db.Text, nullable=False)
-    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    lighter_id = db.Column(
+        db.Integer,
+        db.ForeignKey("lighters.id"),
+        nullable=False,
+        index=True
+    )
+
+    note = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
