@@ -8,16 +8,43 @@
     <p class="page-subtitle">This message is only visible after entering the correct PIN.</p>
   </div>
 
+  <!-- Private owner message -->
   <div class="panel">
     <div style="color: rgba(255,255,255,0.92); font-size:18px; line-height:1.6; white-space: pre-wrap;">
       {{ lighter.private_message }}
     </div>
 
     <div class="btn-row" style="margin-top:16px;">
-      <a class="btn secondary small" href="{{ url_for('main.lighter_page', token=lighter.token) }}" style="text-align:center; line-height: 40px; text-decoration:none;">Back</a>
-      <a class="btn secondary small" href="{{ url_for('main.home') }}" style="text-align:center; line-height: 40px; text-decoration:none;">Home</a>
+      <a class="btn secondary small"
+         href="{{ url_for('main.lighter_page', token=lighter.token) }}"
+         style="text-align:center; line-height: 40px; text-decoration:none;">
+        Back
+      </a>
+      <a class="btn secondary small"
+         href="{{ url_for('main.home') }}"
+         style="text-align:center; line-height: 40px; text-decoration:none;">
+        Home
+      </a>
     </div>
   </div>
+
+  <!-- FOUND NOTE (only shows if someone left one) -->
+  {% if lighter.found_note %}
+  <div class="panel" style="margin-top:14px;">
+    <div class="panel-title">Found note</div>
+
+    <div class="big-message">
+      {{ lighter.found_note }}
+    </n>
+
+    {% if lighter.found_at %}
+    <div class="small-note" style="margin-top:10px;">
+      Received: {{ lighter.found_at }}
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+
 </div>
 
 {% endblock %}
