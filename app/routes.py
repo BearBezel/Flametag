@@ -74,8 +74,17 @@ def unlock_private(token):
         flash("Wrong PIN.", "err")
         return redirect(url_for("main.lighter_page", token=token))
 
-    flash("Unlocked.", "ok")
-    return render_template("lighter.html", lighter=lighter, show_private=True)
+   flash("Unlocked.", "ok")
+
+   found_notes = (
+    FoundNote.query
+    .filter_by(lighter_id=lighter.id)
+    .order_by(FoundNote.created_at.desc())
+    .all()
+)
+
+return render_template("unlock.html", lighter=lighter, found_notes=found_notes)
+
 
 @bp.post("/l/<token>/found")
 def found_lighter(token):
