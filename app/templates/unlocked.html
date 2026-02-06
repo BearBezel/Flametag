@@ -28,23 +28,21 @@
     </div>
   </div>
 
-  <!-- FOUND NOTE (only shows if someone left one) -->
-  {% if lighter.found_note %}
+  <!-- FOUND NOTES (shows all notes left by finders) -->
+  {% if found_notes and found_notes|length > 0 %}
   <div class="panel" style="margin-top:14px;">
-    <div class="panel-title">Found note</div>
+    <div class="panel-title">Found notes</div>
 
-    <div class="big-message">
-      {{ lighter.found_note }}
-    </n>
-
-    {% if lighter.found_at %}
-    <div class="small-note" style="margin-top:10px;">
-      Received: {{ lighter.found_at }}
+    <div class="stack">
+      {% for n in found_notes %}
+        <div style="padding:12px; border:1px solid rgba(255,255,255,0.10); border-radius:14px;">
+          <div class="big-message" style="margin:0;">{{ n.note }}</div>
+          <div class="small-note" style="margin-top:8px;">
+            Received: {{ n.created_at }}
+          </div>
+        </div>
+      {% endfor %}
     </div>
-    {% endif %}
   </div>
   {% endif %}
-
-</div>
-
-{% endblock %}
+ 
