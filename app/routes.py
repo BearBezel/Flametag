@@ -65,26 +65,34 @@ def claim_lighter(token):
 @bp.post("/l/<token>/unlock")
 def unlock_private(token):
     lighter = get_or_404(token)
+
     if not lighter.is_claimed():
         flash("This lighter hasn't been claimed yet.", "err")
         return redirect(url_for("main.lighter_page", token=token))
 
     pin = (request.form.get("pin") or "").strip()
-    if not pin or not lighter.owner_pin_hash or not check_password_hash(lighter.owner_pin_hash, pin):
+    if (
+        not pin
+        or not lighter.owner_pin_hash
+        or not check_password_hash(lighter.owner_pin_hash, pin)
+    ):
         flash("Wrong PIN.", "err")
         return redirect(url_for("main.lighter_page", token=token))
 
-   flash("Unlocked.", "ok")
+    flash("Unlocked.", "ok")
 
-   found_notes = (
-    FoundNote.query
-    .filter_by(lighter_id=lighter.id)
-    .order_by(FoundNote.created_at.desc())
-    .all()
-)
+    found_notes = (
+        FoundNote.query
+        .filter_by(lighter_id=lighter.id)
+        .order_by(FoundNote.created_at.desc())
+        .all()
+    )
 
-return render_template("unlock.html", lighter=lighter, found_notes=found_notes)
-
+    return render_template(
+        "unlock.html",
+        lighter=lighter,
+        found_notes=found_notes
+    )
 
 @bp.post("/l/<token>/found")
 def found_lighter(token):
