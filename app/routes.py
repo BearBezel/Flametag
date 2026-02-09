@@ -89,7 +89,7 @@ def unlock_private(token):
     )
 
     return render_template(
-        "unlock.html",
+        "unlocked.html",
         lighter=lighter,
         found_notes=found_notes
     )
