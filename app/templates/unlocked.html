@@ -2,55 +2,65 @@
 {% block content %}
 
 <div class="page">
+
+  <!-- Header -->
   <div class="page-header">
-    <div class="badge">
-      Unlocked • <span class="code">{{ lighter.token }}</span>
-    </div>
-    <h1 class="page-title" style="margin-top:14px;">
-      Owner-only message
-    </h1>
+    <div class="badge">Owner access • <span class="code">{{ lighter.token }}</span></div>
+    <h1 class="page-title" style="margin-top:14px;">Private inbox</h1>
     <p class="page-subtitle">
-      This message is only visible after entering the correct PIN.
+      Only you can see these messages. People who find your item can leave notes here.
     </p>
   </div>
 
-  <!-- Private owner message -->
+  <!-- Owner private message -->
   <div class="panel">
-    <div style="color: rgba(255,255,255,0.92); font-size:18px; line-height:1.6; white-space: pre-wrap;">
+    <div class="panel-title">Your private message</div>
+
+    <div class="big-message" style="white-space: pre-wrap;">
       {{ lighter.private_message }}
     </div>
 
     <div class="btn-row" style="margin-top:16px;">
       <a class="btn secondary small"
-         href="{{ url_for('main.lighter_page', token=lighter.token) }}"
-         style="text-align:center; line-height:40px; text-decoration:none;">
+         href="{{ url_for('main.lighter_page', token=lighter.token) }}">
         Back
       </a>
-
       <a class="btn secondary small"
-         href="{{ url_for('main.home') }}"
-         style="text-align:center; line-height:40px; text-decoration:none;">
+         href="{{ url_for('main.home') }}">
         Home
       </a>
     </div>
   </div>
 
-  <!-- FOUND NOTES (shows all notes left by finders) -->
+  <!-- Inbox -->
   {% if found_notes and found_notes|length > 0 %}
-  <div class="panel" style="margin-top:14px;">
-    <div class="panel-title">Found notes</div>
+  <div class="panel" style="margin-top:16px;">
+    <div class="panel-title">Messages from people who found your item</div>
 
     <div class="stack">
       {% for n in found_notes %}
-        <div style="padding:12px; border:1px solid rgba(255,255,255,0.10); border-radius:14px;">
+        <div style="
+          padding:14px;
+          border-radius:16px;
+          background: rgba(255,255,255,0.04);
+          border: 1px solid rgba(255,255,255,0.10);
+        ">
           <div class="big-message" style="margin:0;">
             {{ n.note }}
           </div>
+
           <div class="small-note" style="margin-top:8px;">
-            Received: {{ n.created_at }}
+            Received {{ n.created_at.strftime('%d %b %Y, %H:%M') }}
           </div>
         </div>
       {% endfor %}
+    </div>
+  </div>
+  {% else %}
+  <div class="panel" style="margin-top:16px; text-align:center;">
+    <div class="panel-title">Inbox</div>
+    <div class="small-note">
+      No one has left a message yet.
     </div>
   </div>
   {% endif %}
