@@ -98,7 +98,11 @@
 
       <form method="post" action="{{ url_for('main.claim_lighter', token=lighter.token) }}" class="stack">
         <label>Public message</label>
-        <textarea name="public_message"></textarea>
+        <textarea
+          name="public_message"
+          rows="3"
+          placeholder="This message is public. You can say it’s yours, ask for it back, or leave a short note 🙂"
+        ></textarea>
 
         <label>Private message</label>
         <textarea name="private_message"></textarea>
