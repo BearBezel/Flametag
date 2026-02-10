@@ -2,19 +2,15 @@
 {% block content %}
 
 <div class="page">
-
-  <!-- Header -->
   <div class="page-header">
-    <div class="badge">Owner access • <span class="code">{{ lighter.token }}</span></div>
-    <h1 class="page-title" style="margin-top:14px;">Private inbox</h1>
-    <p class="page-subtitle">
-      Only you can see these messages. People who find your item can leave notes here.
-    </p>
+    <div class="badge">Owner view • <span class="code">{{ lighter.token }}</span></div>
+    <h1 class="page-title" style="margin-top:14px;">Private message</h1>
+    <p class="page-subtitle">Only visible after entering the correct PIN.</p>
   </div>
 
-  <!-- Owner private message -->
+  <!-- Private owner message -->
   <div class="panel">
-    <div class="panel-title">Your private message</div>
+    <div class="panel-title">Owner-only message</div>
 
     <div class="big-message" style="white-space: pre-wrap;">
       {{ lighter.private_message }}
@@ -22,49 +18,49 @@
 
     <div class="btn-row" style="margin-top:16px;">
       <a class="btn secondary small"
-         href="{{ url_for('main.lighter_page', token=lighter.token) }}">
+         href="{{ url_for('main.lighter_page', token=lighter.token) }}"
+         style="text-align:center; line-height: 40px; text-decoration:none;">
         Back
       </a>
       <a class="btn secondary small"
-         href="{{ url_for('main.home') }}">
+         href="{{ url_for('main.home') }}"
+         style="text-align:center; line-height: 40px; text-decoration:none;">
         Home
       </a>
     </div>
   </div>
 
-  <!-- Inbox -->
-  {% if found_notes and found_notes|length > 0 %}
-  <div class="panel" style="margin-top:16px;">
-    <div class="panel-title">Messages from people who found your item</div>
+  <!-- Found notes timeline -->
+  <div class="panel" style="margin-top:14px;">
+    <div class="panel-title">Finder notes</div>
 
-    <div class="stack">
-      {% for n in found_notes %}
-        <div style="
-          padding:14px;
-          border-radius:16px;
-          background: rgba(255,255,255,0.04);
-          border: 1px solid rgba(255,255,255,0.10);
-        ">
-          <div class="big-message" style="margin:0;">
-            {{ n.note }}
-          </div>
+    {% if found_notes and found_notes|length > 0 %}
+      <div class="small-note" style="margin-bottom:10px;">
+        Total notes: <strong>{{ found_notes|length }}</strong>
+      </div>
 
-          <div class="small-note" style="margin-top:8px;">
-            Received {{ n.created_at.strftime('%d %b %Y, %H:%M') }}
+      <div class="stack">
+        {% for n in found_notes %}
+          <div style="padding:14px; border:1px solid rgba(255,255,255,0.10); border-radius:16px; background: rgba(255,255,255,0.03);">
+            <div class="big-message" style="margin:0; white-space: pre-wrap;">{{ n.note }}</div>
+
+            <div class="small-note" style="margin-top:10px;">
+              Received: {{ n.created_at.strftime("%d %b %Y, %H:%M") if n.created_at else "" }}
+            </div>
           </div>
-        </div>
-      {% endfor %}
-    </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="big-message" style="opacity:0.9;">
+        No one has left a note yet.
+      </div>
+      <div class="small-note" style="margin-top:8px;">
+        When someone finds this lighter and submits a note, it will appear here.
+      </div>
+    {% endif %}
   </div>
-  {% else %}
-  <div class="panel" style="margin-top:16px; text-align:center;">
-    <div class="panel-title">Inbox</div>
-    <div class="small-note">
-      No one has left a message yet.
-    </div>
-  </div>
-  {% endif %}
 
 </div>
 
 {% endblock %}
+
