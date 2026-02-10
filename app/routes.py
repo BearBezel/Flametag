@@ -71,6 +71,7 @@ def unlock_private(token):
         return redirect(url_for("main.lighter_page", token=token))
 
     pin = (request.form.get("pin") or "").strip()
+
     if (
         not pin
         or not lighter.owner_pin_hash
