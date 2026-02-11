@@ -551,3 +551,28 @@ label{
   font-weight: 700;
   font-size: 12px;
 }
+
+.chat-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.chat-bubble {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  padding: 14px 16px;
+}
+
+.chat-text {
+  font-size: 16px;
+  line-height: 1.5;
+  color: rgba(255,255,255,0.95);
+}
+
+.chat-time {
+  font-size: 12px;
+  opacity: 0.6;
+  margin-top: 6px;
+}
