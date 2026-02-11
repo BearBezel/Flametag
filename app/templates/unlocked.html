@@ -30,37 +30,36 @@
     </div>
   </div>
 
-  <!-- Found notes timeline -->
-  <div class="panel" style="margin-top:14px;">
-    <div class="panel-title">Finder notes</div>
+<!-- Found notes timeline -->
+<div class="panel" style="margin-top:14px;">
+  <div class="panel-title">Finder notes</div>
 
-    {% if found_notes and found_notes|length > 0 %}
-      <div class="small-note" style="margin-bottom:10px;">
-        Total notes: <strong>{{ found_notes|length }}</strong>
-      </div>
+  {% if found_notes and found_notes|length > 0 %}
 
-      <div class="stack">
-        {% for n in found_notes %}
-          <div style="padding:14px; border:1px solid rgba(255,255,255,0.10); border-radius:16px; background: rgba(255,255,255,0.03);">
-            <div class="big-message" style="margin:0; white-space: pre-wrap;">{{ n.note }}</div>
-
-            <div class="small-note" style="margin-top:10px;">
-              Received: {{ n.created_at.strftime("%d %b %Y, %H:%M") if n.created_at else "" }}
-            </div>
+    <div class="chat-stack">
+      {% for n in found_notes %}
+        <div class="chat-bubble">
+          <div class="chat-text">
+            {{ n.note }}
           </div>
-        {% endfor %}
-      </div>
-    {% else %}
-      <div class="big-message" style="opacity:0.9;">
-        No one has left a note yet.
-      </div>
-      <div class="small-note" style="margin-top:8px;">
-        When someone finds this lighter and submits a note, it will appear here.
-      </div>
-    {% endif %}
-  </div>
+          <div class="chat-time">
+            {{ n.created_at.strftime('%d %b %Y · %H:%M') }}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
 
+  {% else %}
+
+    <div class="big-message" style="opacity:0.85;">
+      No one has left a note yet.
+    </div>
+
+    <div class="small-note" style="margin-top:8px;">
+      When someone finds this lighter and submits a note, it will appear here.
+    </div>
+
+  {% endif %}
 </div>
 
 {% endblock %}
-
