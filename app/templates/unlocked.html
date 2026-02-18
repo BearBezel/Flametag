@@ -3,16 +3,14 @@
 
 <div class="page">
   <div class="page-header">
-    <div class="badge">Owner view • <span class="code">{{ lighter.token }}</span></div>
-    <h1 class="page-title" style="margin-top:14px;">Private message</h1>
-    <p class="page-subtitle">Only visible after entering the correct PIN.</p>
+    <div class="badge">Messages • <span class="code">{{ lighter.token }}</span></div>
+    <h1 class="page-title" style="margin-top:14px;">Owner Inbox</h1>
+    <p class="page-subtitle">Private messages from people who found your items.</p>
   </div>
 
-  <!-- Private owner message -->
   <div class="panel">
-    <div class="panel-title">Owner-only message</div>
-
-    <div class="big-message" style="white-space: pre-wrap;">
+    <div class="panel-title">Your private owner message</div>
+    <div style="color: rgba(255,255,255,0.92); font-size:18px; line-height:1.6; white-space: pre-wrap;">
       {{ lighter.private_message }}
     </div>
 
@@ -30,36 +28,31 @@
     </div>
   </div>
 
-<!-- Found notes timeline -->
-<div class="panel" style="margin-top:14px;">
-  <div class="panel-title">Finder notes</div>
+  {% if found_messages and found_messages|length > 0 %}
+  <div class="panel" style="margin-top:14px;">
+    <div class="panel-title">Finder messages</div>
 
-  {% if found_notes and found_notes|length > 0 %}
+    <div class="stack">
+      {% for m in found_messages %}
+        <div style="padding:12px; border:1px solid rgba(255,255,255,0.10); border-radius:14px;">
+          <div class="small-note" style="margin-bottom:6px;">
+            Item: <span class="code">{{ m.item_label }}</span> • {{ m.created_at }}
+          </div>
 
-    <div class="chat-stack">
-      {% for n in found_notes %}
-        <div class="chat-bubble">
-          <div class="chat-text">
-            {{ n.note }}
+          <div class="big-message" style="margin:0;">{{ m.note }}</div>
+
+          {% if m.finder_name or m.finder_contact %}
+          <div class="small-note" style="margin-top:10px;">
+            {% if m.finder_name %}From: {{ m.finder_name }}{% endif %}
+            {% if m.finder_contact %}{% if m.finder_name %} • {% endif %}Contact: {{ m.finder_contact }}{% endif %}
           </div>
-          <div class="chat-time">
-            {{ n.created_at.strftime('%d %b %Y · %H:%M') }}
-          </div>
+          {% endif %}
         </div>
       {% endfor %}
     </div>
-
-  {% else %}
-
-    <div class="big-message" style="opacity:0.85;">
-      No one has left a note yet.
-    </div>
-
-    <div class="small-note" style="margin-top:8px;">
-      When someone finds this lighter and submits a note, it will appear here.
-    </div>
-
+  </div>
   {% endif %}
+
 </div>
 
 {% endblock %}
