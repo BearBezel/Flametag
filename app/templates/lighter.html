@@ -44,14 +44,16 @@
 
       <form method="post" action="{{ url_for('main.found_lighter', token=lighter.token) }}" class="stack">
         {# Optional: item selection (won’t crash if items isn’t wired yet) #}
-        {% if lighter.items is defined and lighter.items|length > 0 %}
-          <label>Which item did you find?</label>
-          <select name="item_id">
-            {% for it in lighter.items %}
-              <option value="{{ it.id }}">{{ it.label }}</option>
-            {% endfor %}
-          </select>
-        {% endif %}
+        <label>Which item did you find?</label>
+
+      <div class="select-wrapper">
+        <select name="item_id" class="styled-select">
+          {% for it in lighter.items %}
+            <option value="{{ it.id }}">{{ it.label }}</option>
+          {% endfor %}
+       </select>
+    </div>
+
 
         <label>Your note</label>
         <textarea
