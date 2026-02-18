@@ -141,7 +141,15 @@ def found_lighter(token):
         flash("Please add a short note (where you found it).", "err")
         return redirect(url_for("main.lighter_page", token=token))
 
-    item_label = (request.form.get("item_label") or "General").strip()
+    item_id = request.form.get("item_id")
+
+    item_label = "General"
+
+    if item_id:
+        item = next((it for it in lighter.items if str(it.id) == item_id), None)
+        if item:
+            item_label = item.label
+
     finder_name = (request.form.get("finder_name") or "").strip()
     finder_contact = (request.form.get("finder_contact") or "").strip()
 
