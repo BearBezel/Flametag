@@ -576,3 +576,40 @@ label{
   opacity: 0.6;
   margin-top: 6px;
 }
+
+/* ===== Styled Select Dropdown ===== */
+
+.select-wrapper {
+  position: relative;
+}
+
+.styled-select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.05);
+  color: white;
+  font-size: 16px;
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  transition: border 0.2s ease, background 0.2s ease;
+}
+
+.styled-select:focus {
+  border: 1px solid rgba(255,255,255,0.35);
+  background: rgba(255,255,255,0.08);
+}
+
+/* Arrow icon */
+.select-wrapper::after {
+  content: "⌄";
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: rgba(255,255,255,0.6);
+  font-size: 14px;
+}
