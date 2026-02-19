@@ -22,198 +22,172 @@
   <div class="panel">
     <div class="section-title">Public message</div>
     <div class="big-message" style="white-space: pre-wrap;">
-      {{ lighter.public_message or "🔥 This lighter is owned. Please return it." }}
+      {{ lighter.public_message or "🔥 This tag is owned. Please return it." }}
     </div>
   </div>
 
   {% if lighter.claimed_at %}
-  <!-- Tabs (only when claimed) -->
-  <div class="panel" style="margin-top:14px;">
-    <div class="btn-row" style="gap:10px;">
-      <button class="btn secondary small tab-btn active" data-tab="tab-found">Found it</button>
-      <button class="btn secondary small tab-btn" data-tab="tab-unlock">Messages</button>
-      <button class="btn secondary small tab-btn" data-tab="tab-edit">Edit</button>
-    </div>
 
-    <!-- TAB: Found it -->
-    <div class="tab-panel" id="tab-found" style="margin-top:14px;">
-      <div class="section-title">Send a note to the owner</div>
-      <div class="small-note" style="margin-bottom:10px;">
-        Keep it simple: where you found it + best way to contact you (if you want).
+    <!-- Tabs wrapper (only when claimed) -->
+    <div class="panel" style="margin-top:14px;">
+      <div class="btn-row" style="gap:10px;">
+        <button class="btn secondary small tab-btn active" data-tab="tab-found" type="button">Found it</button>
+        <button class="btn secondary small tab-btn" data-tab="tab-unlock" type="button">Messages</button>
+        <button class="btn secondary small tab-btn" data-tab="tab-edit" type="button">Edit</button>
       </div>
 
-      <form method="post" action="{{ url_for('main.found_lighter', token=lighter.token) }}" class="stack">
-        {# Optional: item selection (won’t crash if items isn’t wired yet) #}
-        <label>Language</label>
-        <div class="select-wrapper">
-           <input
-             name="finder_lang"
-             class="styled-input"
-             list="language-list"
-             placeholder="Search language (e.g. English)"
-             autocomplete="off"
-          />
+      <!-- TAB: Found it -->
+      <div class="tab-panel" id="tab-found" style="margin-top:14px;">
+        <div class="section-title">Send a note to the owner</div>
+        <div class="small-note" style="margin-bottom:10px;">
+          Keep it simple: where you found it + best way to contact you (if you want).
         </div>
 
-        <datalist id="language-list">
-          <option value="English"></option>
-          <option value="Spanish"></option>
-          <option value="French"></option>
-          <option value="German"></option>
-          <option value="Italian"></option>
-          <option value="Portuguese"></option>
-          <option value="Dutch"></option>
-          <option value="Arabic"></option>
-          <option value="Hindi"></option>
-          <option value="Urdu"></option>
-          <option value="Chinese (Mandarin)"></option>
-          <option value="Japanese"></option>
-          <option value="Korean"></option>
-          <option value="Swahili"></option>
-          <option value="Yoruba"></option>
-          <option value="Igbo"></option>
-        </datalist>
+        <form method="post" action="{{ url_for('main.found_lighter', token=lighter.token) }}" class="stack">
+          <!-- Item picker -->
+          <label>Which item did you find?</label>
+          <div class="select-wrapper">
+            <select name="item_id" class="styled-select">
+              {% if lighter.items and lighter.items|length > 0 %}
+                {% for it in lighter.items %}
+                  <option value="{{ it.id }}">{{ it.label }}</option>
+                {% endfor %}
+              {% else %}
+                <option value="">General</option>
+              {% endif %}
+            </select>
+          </div>
 
-        <label>Which item did you find?</label>
+          <label>Your note</label>
+          <textarea
+            name="found_note"
+            rows="4"
+            required
+            placeholder="Hey! I found your item 🙂&#10;Where I found it: ...&#10;Best way to reach me (optional): @____ / phone ____"
+          ></textarea>
 
-      <div class="select-wrapper">
-        <select name="item_id" class="styled-select">
-          {% for it in lighter.items %}
-            <option value="{{ it.id }}">{{ it.label }}</option>
-          {% endfor %}
-       </select>
-    </div>
-
-
-        <label>Your note</label>
-        <textarea
-          name="found_note"
-          rows="4"
-          required
-          placeholder="Hey! I found your lighter 🙂&#10;I’m at Shoreditch station. Message me on Instagram: @____ (optional)."
-        ></textarea>
-
-        <button class="btn secondary" type="submit">Send note</button>
-        <div class="small-note">Your note is saved for the owner to see after unlocking.</div>
-      </form>
-    </div>
-
-    <!-- TAB: Messages (unlock private / owner view) -->
-    <div class="tab-panel hidden" id="tab-unlock" style="margin-top:14px;">
-      <div class="section-title">Owner messages</div>
-      <div class="small-note" style="margin-bottom:10px;">
-        Enter your owner PIN to view the private message + finder notes.
+          <button class="btn secondary" type="submit">Send note</button>
+          <div class="small-note">Your note is saved for the owner to see after unlocking.</div>
+        </form>
       </div>
 
-      <form method="post" action="{{ url_for('main.unlock_private', token=lighter.token) }}" class="stack">
-        <label>Owner PIN</label>
-        <input name="pin" placeholder="Enter PIN" />
-        <button class="btn primary" type="submit">Unlock messages</button>
-        <div class="small-note">Only the owner PIN can unlock.</div>
+      <!-- TAB: Messages (owner unlock) -->
+      <div class="tab-panel hidden" id="tab-unlock" style="margin-top:14px;">
+        <div class="section-title">Owner messages</div>
+        <div class="small-note" style="margin-bottom:10px;">
+          Enter your owner PIN to view the private message + finder messages.
+        </div>
+
+        <form method="post" action="{{ url_for('main.unlock_private', token=lighter.token) }}" class="stack">
+          <label>Owner PIN</label>
+          <input name="pin" placeholder="Enter PIN" />
+          <button class="btn primary" type="submit">Unlock messages</button>
+          <div class="small-note">Only the owner PIN can unlock.</div>
+        </form>
+      </div>
+
+      <!-- TAB: Edit (PIN gate, then edit form) -->
+      <div class="tab-panel hidden" id="tab-edit" style="margin-top:14px;">
+
+        {% if session.get('edit_ok_' ~ lighter.token) %}
+
+          <div class="section-title">Edit your tag</div>
+          <div class="small-note" style="margin-bottom:10px;">
+            Change your public + private message.
+          </div>
+
+          <form method="post" action="{{ url_for('main.edit_lighter', token=lighter.token) }}" class="stack">
+            <label>Public message</label>
+            <textarea name="public_message" rows="3">{{ lighter.public_message }}</textarea>
+
+            <label>Private message</label>
+            <textarea name="private_message" rows="3">{{ lighter.private_message }}</textarea>
+
+            <label>Items on this tag (one per line)</label>
+            <textarea name="items" rows="5" placeholder="Keys&#10;Wallet&#10;Bag&#10;Lighter&#10;Other">{% if lighter.items and lighter.items|length > 0 %}{% for it in lighter.items %}{{ it.label }}{% if not loop.last %}&#10;{% endif %}{% endfor %}{% endif %}</textarea>
+
+            <button class="btn primary" type="submit">Save changes</button>
+          </form>
+
+        {% else %}
+
+          <div class="section-title">Owner PIN required</div>
+          <div class="small-note" style="margin-bottom:10px;">
+            Unlock editing with your owner PIN.
+          </div>
+
+          <form method="post" action="{{ url_for('main.edit_unlock', token=lighter.token) }}" class="stack">
+            <label>Owner PIN</label>
+            <input name="pin" placeholder="Owner PIN" />
+            <button class="btn primary" type="submit">Unlock edit</button>
+            <div class="small-note">Only the owner PIN can unlock editing.</div>
+          </form>
+
+        {% endif %}
+
+      </div> <!-- end tab-edit -->
+
+    </div> <!-- end tabs panel -->
+
+  {% else %}
+
+    <!-- Not claimed yet -->
+    <div class="panel" style="margin-top:14px;">
+      <div class="section-title">Tag this item</div>
+      <p class="page-subtitle" style="margin-top:6px;">
+        Set your public + private message and a PIN.
+      </p>
+
+      <form method="post" action="{{ url_for('main.claim_lighter', token=lighter.token) }}" class="stack">
+        <label>Public message</label>
+        <textarea
+          name="public_message"
+          rows="3"
+          placeholder="This is mine 🔥 Please DM @___ or text ___ if found."
+        ></textarea>
+
+        <label>Private message</label>
+        <textarea
+          name="private_message"
+          rows="3"
+          placeholder="Thanks for finding this — please leave where you found it."
+        ></textarea>
+
+        <label>Choose a PIN (min 4 chars)</label>
+        <input name="pin" placeholder="Choose a PIN" />
+
+        <button class="btn primary" type="submit">Tag it</button>
       </form>
     </div>
 
-    <div class="tab-panel hidden" id="tab-edit" style="margin-top:14px;">
-
-  {% if session.get('edit_ok_' ~ lighter.token) %}
-
-    <div class="section-title">Edit your tag</div>
-    <div class="small-note" style="margin-bottom:10px;">
-      Change your public + private message.
-    </div>
-
-    <form method="post" action="{{ url_for('main.edit_lighter', token=lighter.token) }}" class="stack">
-
-      <label>Public message</label>
-      <textarea name="public_message" rows="3">{{ lighter.public_message }}</textarea>
-
-      <label>Private message</label>
-      <textarea name="private_message" rows="3">{{ lighter.private_message }}</textarea>
-
-      <label>Items on this tag (one per line)</label>
-      <textarea name="items" rows="5" placeholder="Keys&#10;Wallet&#10;Bag&#10;Lighter&#10;Other">
-{% for it in lighter.items %}
-{{ it.label }}
-{% endfor %}
-      </textarea>
-
-      <button class="btn primary" type="submit">Save changes</button>
-    </form>
-
-  {% else %}
-
-    <div class="section-title">Owner PIN required</div>
-
-    <form method="post" action="{{ url_for('main.edit_unlock', token=lighter.token) }}" class="stack">
-      <input name="pin" placeholder="Owner PIN" />
-      <button class="btn primary" type="submit">Unlock edit</button>
-      <div class="small-note">Only the owner PIN can unlock editing.</div>
-    </form>
-
-  {% endif %}
-
-</div>
-
-
-  {% else %}
-  <!-- Not claimed yet -->
-  <div class="panel" style="margin-top:14px;">
-    <div class="section-title">Tag this lighter</div>
-    <p class="page-subtitle" style="margin-top:6px;">
-      Set your public + private message and a PIN.
-    </p>
-
-    <form method="post" action="{{ url_for('main.claim_lighter', token=lighter.token) }}" class="stack">
-      <label>Public message</label>
-      <textarea
-        name="public_message"
-        rows="3"
-        placeholder="This is mine 🔥 Please DM @___ or text ___ if found."
-      ></textarea>
-
-      <label>Private message</label>
-      <textarea
-        name="private_message"
-        rows="3"
-        placeholder="Thanks for finding this — please leave where you found it."
-      ></textarea>
-
-      <label>Choose a PIN (min 4 chars)</label>
-      <input name="pin" placeholder="Choose a PIN" />
-
-      <button class="btn primary" type="submit">Tag it</button>
-    </form>
-  </div>
   {% endif %}
 
 </div>
 
 <script>
-  const btns = document.querySelectorAll(".tab-btn");
-  const panels = {
-    found: document.getElementById("tab-found"),
-    unlock: document.getElementById("tab-unlock"),
-    edit: document.getElementById("tab-edit"),
-  };
+  (function () {
+    const btns = document.querySelectorAll(".tab-btn");
 
-  function showTab(id) {
-    Object.values(panels).forEach(p => p.classList.add("hidden"));
-    const panel = document.getElementById(id);
-    if (panel) panel.classList.remove("hidden");
+    function showTab(id) {
+      document.querySelectorAll(".tab-panel").forEach(p => p.classList.add("hidden"));
+      const panel = document.getElementById(id);
+      if (panel) panel.classList.remove("hidden");
 
-    btns.forEach(b => b.classList.remove("active"));
-    btns.forEach(b => {
-      if (b.dataset.tab === id) b.classList.add("active");
+      btns.forEach(b => b.classList.remove("active"));
+      btns.forEach(b => {
+        if (b.dataset.tab === id) b.classList.add("active");
+      });
+    }
+
+    btns.forEach(btn => {
+      btn.addEventListener("click", () => showTab(btn.dataset.tab));
     });
-  }
 
-  btns.forEach(btn => {
-    btn.addEventListener("click", () => showTab(btn.dataset.tab));
-  });
-
-  // default tab
-  showTab("tab-found");
+    // default
+    showTab("tab-found");
+  })();
 </script>
 
 {% endblock %}
+
 
