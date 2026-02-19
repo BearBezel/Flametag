@@ -613,3 +613,18 @@ label{
   color: rgba(255,255,255,0.6);
   font-size: 14px;
 }
+
+.styled-input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.92);
+  outline: none;
+  font-size: 16px;
+}
+
+.styled-input::placeholder {
+  color: rgba(255,255,255,0.45);
+}
