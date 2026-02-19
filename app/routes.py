@@ -176,7 +176,6 @@ def found_lighter(token):
             lighter_id=lighter.id,
             item_label=item_label or "General",
             note=note,
-            finder_lang=finder_lang or None,
             finder_name=finder_name or None,
             finder_contact=finder_contact or None,
             is_read=False,
