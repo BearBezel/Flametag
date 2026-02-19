@@ -36,9 +36,7 @@
       {% for m in found_messages %}
         <div style="padding:12px; border:1px solid rgba(255,255,255,0.10); border-radius:14px;">
           <div class="small-note" style="margin-bottom:6px;">
-              Item: <span class="code">{{ m.item_label }}</span>
-              {% if m.finder_lang %} • Language: {{ m.finder_lang }}{% endif %}
-              • {{ m.created_at }}
+              Item: <span class="code">{{ m.item_label }}</span> • {{ m.created_at }}      
           </div>
 
           <div class="big-message" style="margin:0;">{{ m.note }}</div>
