@@ -102,10 +102,10 @@ def edit_lighter(token):
         flash("Claim it first.", "err")
         return redirect(url_for("main.lighter_page", token=token))
 
-# Must unlock edit first (via /l/<token>/edit/unlock)
-if not session.get(f"edit_ok_{token}"):
-    flash("Owner PIN required to edit.", "err")
-    return redirect(url_for("main.lighter_page", token=token) + "#tab-edit")    
+    # Must unlock edit first (via /l/<token>/edit/unlock)
+    if not session.get(f"edit_ok_{token}"):
+        flash("Owner PIN required to edit.", "err")
+        return redirect(url_for("main.lighter_page", token=token) + "#tab-edit")    
     public_message = (request.form.get("public_message") or "").strip()
     private_message = (request.form.get("private_message") or "").strip()
 
