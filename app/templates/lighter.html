@@ -113,32 +113,47 @@
       </form>
     </div>
 
-    <!-- TAB: Owner edit -->
     <div class="tab-panel hidden" id="tab-edit" style="margin-top:14px;">
-      <div class="section-title">Edit your tag</div>
-      <div class="small-note" style="margin-bottom:10px;">
-        Change your public + private message (PIN required).
-      </div>
 
-      <form method="post" action="{{ url_for('main.edit_lighter', token=lighter.token) }}" class="stack">
-        <label>Owner PIN</label>
-        <input name="pin" placeholder="Owner PIN" />
+  {% if session.get('edit_ok_' ~ lighter.token) %}
 
-        <label>Public message</label>
-        <textarea name="public_message" rows="3">{{ lighter.public_message }}</textarea>
-
-        <label>Private message</label>
-        <textarea name="private_message" rows="3">{{ lighter.private_message }}</textarea>
-
-        <!-- Items list (safe even if you haven't wired items yet) -->
-        <label>Items on this tag (one per line)</label>
-        <textarea name="items" rows="5" placeholder="Keys&#10;Wallet&#10;Bag&#10;Lighter&#10;Other">{% if lighter.items is defined %}{% for it in lighter.items %}{{ it.label }}{% if not loop.last %}&#10;{% endif %}{% endfor %}{% endif %}</textarea>
-        <div class="small-note">Finder can pick one of these when leaving a message (once we wire it).</div>
-
-        <button class="btn primary" type="submit">Save changes</button>
-      </form>
+    <div class="section-title">Edit your tag</div>
+    <div class="small-note" style="margin-bottom:10px;">
+      Change your public + private message.
     </div>
-  </div>
+
+    <form method="post" action="{{ url_for('main.edit_lighter', token=lighter.token) }}" class="stack">
+
+      <label>Public message</label>
+      <textarea name="public_message" rows="3">{{ lighter.public_message }}</textarea>
+
+      <label>Private message</label>
+      <textarea name="private_message" rows="3">{{ lighter.private_message }}</textarea>
+
+      <label>Items on this tag (one per line)</label>
+      <textarea name="items" rows="5" placeholder="Keys&#10;Wallet&#10;Bag&#10;Lighter&#10;Other">
+{% for it in lighter.items %}
+{{ it.label }}
+{% endfor %}
+      </textarea>
+
+      <button class="btn primary" type="submit">Save changes</button>
+    </form>
+
+  {% else %}
+
+    <div class="section-title">Owner PIN required</div>
+
+    <form method="post" action="{{ url_for('main.edit_unlock', token=lighter.token) }}" class="stack">
+      <input name="pin" placeholder="Owner PIN" />
+      <button class="btn primary" type="submit">Unlock edit</button>
+      <div class="small-note">Only the owner PIN can unlock editing.</div>
+    </form>
+
+  {% endif %}
+
+</div>
+
 
   {% else %}
   <!-- Not claimed yet -->
