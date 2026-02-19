@@ -44,6 +44,36 @@
 
       <form method="post" action="{{ url_for('main.found_lighter', token=lighter.token) }}" class="stack">
         {# Optional: item selection (won’t crash if items isn’t wired yet) #}
+        <label>Language</label>
+        <div class="select-wrapper">
+           <input
+             name="finder_lang"
+             class="styled-input"
+             list="language-list"
+             placeholder="Search language (e.g. English)"
+             autocomplete="off"
+          />
+        </div>
+
+        <datalist id="language-list">
+          <option value="English"></option>
+          <option value="Spanish"></option>
+          <option value="French"></option>
+          <option value="German"></option>
+          <option value="Italian"></option>
+          <option value="Portuguese"></option>
+          <option value="Dutch"></option>
+          <option value="Arabic"></option>
+          <option value="Hindi"></option>
+          <option value="Urdu"></option>
+          <option value="Chinese (Mandarin)"></option>
+          <option value="Japanese"></option>
+          <option value="Korean"></option>
+          <option value="Swahili"></option>
+          <option value="Yoruba"></option>
+          <option value="Igbo"></option>
+        </datalist>
+
         <label>Which item did you find?</label>
 
       <div class="select-wrapper">
