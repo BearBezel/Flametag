@@ -69,8 +69,7 @@ class FoundMessage(db.Model):
 
     item_label = db.Column(db.String(64), nullable=False, default="General")
     note = db.Column(db.Text, nullable=False) 
-    
-    finder_lang = db.Column(db.String(64), nullable=True)
+
 
     finder_name = db.Column(db.String(80), nullable=True)   # optional
     finder_contact = db.Column(db.String(120), nullable=True)  # optional
