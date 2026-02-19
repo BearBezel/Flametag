@@ -137,6 +137,8 @@ def found_lighter(token):
     lighter = get_or_404(token)
 
     note = (request.form.get("found_note") or "").strip()
+    finder_lang = (request.form.get("finder_lang") or "").strip()
+
     if not note:
         flash("Please add a short note (where you found it).", "err")
         return redirect(url_for("main.lighter_page", token=token))
@@ -158,6 +160,7 @@ def found_lighter(token):
             lighter_id=lighter.id,
             item_label=item_label or "General",
             note=note,
+            finder_lang=finder_lang or None,
             finder_name=finder_name or None,
             finder_contact=finder_contact or None,
             is_read=False,
