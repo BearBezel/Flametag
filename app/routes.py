@@ -130,6 +130,23 @@ def edit_lighter(token):
     flash("Updated.", "ok")
     return redirect(url_for("main.lighter_page", token=token))
 
+@bp.post("/l/<token>/edit/unlock")
+def edit_unlock(token):
+    lighter = get_or_404(token)
+
+    if not lighter.is_claimed():
+        flash("This tag hasn't been claimed yet.", "err")
+        return redirect(url_for("main.lighter_page", token=token))
+
+    pin = (request.form.get("pin") or "").strip()
+    if not pin or not lighter.owner_pin_hash or not check_password_hash(lighter.owner_pin_hash, pin):
+        flash("Wrong owner PIN.", "err")
+        return redirect(url_for("main.lighter_page", token=token) + "#tab-edit")
+
+    session[f"edit_ok_{token}"] = True
+    flash("Edit unlocked.", "ok")
+    return redirect(url_for("main.lighter_page", token=token) + "#tab-edit")
+
 
 # ---------------- Finder -> leave a private message ----------------
 @bp.post("/l/<token>/found")
