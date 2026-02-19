@@ -154,7 +154,6 @@ def found_lighter(token):
     lighter = get_or_404(token)
 
     note = (request.form.get("found_note") or "").strip()
-    finder_lang = (request.form.get("finder_lang") or "").strip()
 
     if not note:
         flash("Please add a short note (where you found it).", "err")
