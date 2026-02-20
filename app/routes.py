@@ -4,7 +4,7 @@ from datetime import datetime
 
 from flask import (
     Blueprint, render_template, request, redirect, url_for,
-    flash, abort, session
+    flash, abort, session, make_response
 )
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -13,6 +13,19 @@ from .models import Lighter, LighterItem, FoundMessage
 
 bp = Blueprint("main", __name__)
 
+@bp.get("/set-lang/<lang>")
+def set_lang(lang):
+    supported = {
+        "en","es","fr","de","it","pt","nl",
+        "ar","hi","ur","ja","ko","sw","yo","ig","zh"
+    }
+
+    if lang not in supported:
+        lang = "en"
+
+    resp = make_response(redirect(request.referrer or url_for("main.index")))
+    resp.set_cookie("lang", lang, max_age=60 * 60 * 24 * 365)  # 1 year
+    return resp
 
 # ---------------- Admin lock helpers ----------------
 def admin_authed() -> bool:
