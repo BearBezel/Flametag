@@ -32,7 +32,12 @@
     <div class="panel" style="margin-top:14px;">
       <div class="btn-row" style="gap:10px;">
         <button class="btn secondary small tab-btn active" data-tab="tab-found" type="button">Found it</button>
-        <button class="btn secondary small tab-btn" data-tab="tab-unlock" type="button">Messages</button>
+        <button class="btn secondary small tab-btn" data-tab="tab-unlock" style="position:relative;">
+          Messages
+          {% if unread_count and unread_count > 0 %}
+            <span class="notif-dot" aria-label="New messages"></span>
+          {% endif %}
+        </button>
         <button class="btn secondary small tab-btn" data-tab="tab-edit" type="button">Edit</button>
       </div>
 
@@ -163,7 +168,24 @@
   {% endif %}
 
 </div>
+<style>
+  .notif-dot{
+    position:absolute;
+    top:6px;
+    right:8px;
+    width:10px;
+    height:10px;
+    border-radius:999px;
+    background:#ff2d2d;
+    box-shadow: 0 0 10px rgba(255,45,45,0.9), 0 0 18px rgba(255,45,45,0.6);
+    animation: notifPulse 1.2s infinite ease-in-out;
+  }
 
+  @keyframes notifPulse{
+    0%, 100% { transform: scale(0.9); opacity: 0.7; }
+    50%      { transform: scale(1.2); opacity: 1; }
+  }
+</style>
 <script>
   (function () {
     const btns = document.querySelectorAll(".tab-btn");
