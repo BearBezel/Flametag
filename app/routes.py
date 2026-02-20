@@ -58,10 +58,12 @@ def lighter_page(token):
     lighter.updated_at = datetime.utcnow()
     db.session.commit()
 
-    if lighter.is_claimed():
-        ensure_default_items(lighter)
+unread_count = 0
+if lighter.is_claimed():
+    ensure_default_items(lighter)
+    unread_count = FoundMessage.query.filter_by(lighter_id=lighter.id, is_read=False).count()
 
-    return render_template("lighter.html", lighter=lighter)
+return render_template("lighter.html", lighter=lighter, unread_count=unread_count)  
 
 
 # ---------------- Claim / Edit ----------------
