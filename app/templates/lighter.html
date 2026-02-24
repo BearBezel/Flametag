@@ -57,14 +57,14 @@
     <!-- Tabs wrapper (only when claimed) -->
     <div class="panel" style="margin-top:14px;">
       <div class="btn-row" style="gap:10px;">
-        <button class="btn secondary small tab-btn active" data-tab="tab-found" type="button">Found it</button>
+        <button class="btn secondary small tab-btn active" data-tab="tab-found" type="button">{{ _("Found it")</button>
         <button class="btn secondary small tab-btn" data-tab="tab-unlock" style="position:relative;">
-          Messages
+          {{ _("Messages") }}
           {% if unread_count and unread_count > 0 %}
-            <span class="notif-dot" aria-label="New messages"></span>
+            <span class="notif-dot" aria-label="{{ _('New messages') }}"></span>
           {% endif %}
         </button>
-        <button class="btn secondary small tab-btn" data-tab="tab-edit" type="button">Edit</button>
+        <button class="btn secondary small tab-btn" data-tab="tab-edit" type="button">{{ _("Edit") }}</button>
       </div>
 
       <!-- TAB: Found it -->
