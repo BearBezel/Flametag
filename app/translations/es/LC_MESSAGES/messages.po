@@ -1,0 +1,121 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: es\n"
+
+msgid "Language"
+msgstr "Idioma"
+
+msgid "Claimed"
+msgstr "Reclamado"
+
+msgid "Unclaimed"
+msgstr "Sin reclamar"
+
+msgid "Scan count:"
+msgstr "Escaneos:"
+
+msgid "Public message"
+msgstr "Mensaje público"
+
+msgid "🔥 This tag is owned. Please return it."
+msgstr "🔥 Esta etiqueta tiene dueño. Por favor devuélvela."
+
+msgid "Found it"
+msgstr "Lo encontré"
+
+msgid "Messages"
+msgstr "Mensajes"
+
+msgid "New messages"
+msgstr "Mensajes nuevos"
+
+msgid "Edit"
+msgstr "Editar"
+
+msgid "Send a note to the owner"
+msgstr "Enviar una nota al dueño"
+
+msgid "Keep it simple: where you found it + best way to contact you (if you want)."
+msgstr "Mantenlo simple: dónde lo encontraste + la mejor forma de contactarte (si quieres)."
+
+msgid "Which item did you find?"
+msgstr "¿Qué objeto encontraste?"
+
+msgid "General"
+msgstr "General"
+
+msgid "Your note"
+msgstr "Tu nota"
+
+msgid "Send note"
+msgstr "Enviar nota"
+
+msgid "Your note is saved for the owner to see after unlocking."
+msgstr "Tu nota se guarda para que el dueño la vea después de desbloquear."
+
+msgid "Owner messages"
+msgstr "Mensajes del dueño"
+
+msgid "Enter your owner PIN to view the private message + finder messages."
+msgstr "Introduce tu PIN para ver el mensaje privado y los mensajes de quien lo encontró."
+
+msgid "Owner PIN"
+msgstr "PIN del dueño"
+
+msgid "Enter PIN"
+msgstr "Introduce PIN"
+
+msgid "Unlock messages"
+msgstr "Desbloquear mensajes"
+
+msgid "Only the owner PIN can unlock."
+msgstr "Solo el PIN del dueño puede desbloquear."
+
+msgid "Edit your tag"
+msgstr "Editar tu etiqueta"
+
+msgid "Change your public + private message."
+msgstr "Cambia tu mensaje público y privado."
+
+msgid "Private message"
+msgstr "Mensaje privado"
+
+msgid "Items on this tag (one per line)"
+msgstr "Objetos en esta etiqueta (uno por línea)"
+
+msgid "Save changes"
+msgstr "Guardar cambios"
+
+msgid "Owner PIN required"
+msgstr "Se requiere PIN del dueño"
+
+msgid "Unlock editing with your owner PIN."
+msgstr "Desbloquea la edición con tu PIN."
+
+msgid "Owner PIN"
+msgstr "PIN del dueño"
+
+msgid "Owner PIN"
+msgstr "PIN del dueño"
+
+msgid "Unlock edit"
+msgstr "Desbloquear edición"
+
+msgid "Only the owner PIN can unlock editing."
+msgstr "Solo el PIN del dueño puede desbloquear la edición."
+
+msgid "Tag this item"
+msgstr "Etiquetar este objeto"
+
+msgid "Set your public + private message and a PIN."
+msgstr "Configura tu mensaje público y privado y un PIN."
+
+msgid "Choose a PIN (min 4 chars)"
+msgstr "Elige un PIN (mín 4 caracteres)"
+
+msgid "Choose a PIN"
+msgstr "Elige un PIN"
+
+msgid "Tag it"
+msgstr "Etiquetarlo"
