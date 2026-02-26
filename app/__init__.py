@@ -27,7 +27,12 @@ def create_app():
             "yo", "ig", "zh"
         ]) or "en"
 
-    babel.init_app(app, locale_selector=get_locale)
+    babel.init_app(
+        app,
+        locale_selector=get_locale,
+        default_locale="en",
+        default_timezone="UTC"
+    )
     # -------- End Babel setup --------
 
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "dev-secret-change-me")
