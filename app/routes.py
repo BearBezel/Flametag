@@ -13,6 +13,33 @@ from .models import Lighter, LighterItem, FoundMessage
 
 bp = Blueprint("main", __name__)
 
+@bp.post("/generate")
+def generate_tag():
+    """
+    Public: create ONE tag per browser session.
+    If they've already generated one, send them back to it.
+    """
+    existing = session.get("generated_token")
+    if existing:
+        # If it still exists in DB, reuse it
+        if Lighter.query.filter_by(token=existing).first():
+            return redirect(url_for("main.lighter_page", token=existing))
+
+    # Create a fresh token
+    alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+    for _ in range(20):  # try a few times to avoid collisions
+        token = "".join(secrets.choice(alphabet) for _ in range(8))
+        if not Lighter.query.filter_by(token=token).first():
+            l = Lighter(token=token)
+            db.session.add(l)
+            db.session.commit()
+            session["generated_token"] = token
+            flash("Tag generated. Set your PIN to claim it.", "ok")
+            return redirect(url_for("main.lighter_page", token=token))
+
+    flash("Could not generate a tag right now. Please try again.", "err")
+    return redirect(url_for("main.home"))
+
 @bp.get("/set-lang/<lang>")
 def set_lang(lang):
     supported = {
