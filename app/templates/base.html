@@ -18,7 +18,7 @@
     </a>
   </div>
   {% endif %}
-  
+
   <!-- Flash messages -->
   {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
@@ -34,6 +34,80 @@
   <main class="app">
     {% block content %}{% endblock %}
   </main>
-<div id="ambient-messages"></div>
+
+  <!-- Ambient background messages (very faint) -->
+  <div id="ambient-messages"></div>
+
+  <style>
+    /* Keep content above ambient layer */
+    .app{
+      position: relative;
+      z-index: 1;
+    }
+
+    #ambient-messages{
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .ambient-msg{
+      position: absolute;
+      font-size: 12px;
+      color: rgba(255,255,255,0.08);
+      white-space: nowrap;
+      animation: floatFade 2s ease-out forwards;
+    }
+
+    @keyframes floatFade{
+      0%{
+        opacity: 0;
+        transform: translateY(10px) scale(0.9);
+      }
+      30%{
+        opacity: 1;
+      }
+      100%{
+        opacity: 0;
+        transform: translateY(-20px) scale(1.05);
+      }
+    }
+  </style>
+
+  <script>
+    const demoMessages = [
+      "🔥 Found near Shoreditch",
+      "Someone left a note 💬",
+      "Reunited in 3 hours",
+      "Found at a café ☕",
+      "Spotted in Berlin",
+      "Message sent ✉️",
+      "Found near Central Park",
+      "Tag reunited!",
+      "Found at the station 🚉",
+      "Left a message 🙂"
+    ];
+
+    function spawnAmbientMessage(){
+      const container = document.getElementById("ambient-messages");
+      if(!container) return;
+
+      const msg = document.createElement("div");
+      msg.className = "ambient-msg";
+      msg.textContent = demoMessages[Math.floor(Math.random() * demoMessages.length)];
+
+      msg.style.left = (Math.random() * 90) + "%";
+      msg.style.top  = (Math.random() * 90) + "%";
+
+      container.appendChild(msg);
+
+      setTimeout(() => msg.remove(), 2000);
+    }
+
+    setInterval(spawnAmbientMessage, 3500);
+  </script>
+
 </body>
 </html>
