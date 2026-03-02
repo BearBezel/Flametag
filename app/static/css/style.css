@@ -628,3 +628,59 @@ label{
 .styled-input::placeholder {
   color: rgba(255,255,255,0.45);
 }
+
+/* ---------- Premium sub navigation (Messages / Edit / etc) ---------- */
+.subnav{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:10px 12px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(10px);
+}
+
+.subnav-left{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  text-decoration:none;
+  color: rgba(255,255,255,0.92);
+  font-weight:800;
+}
+
+.subnav-icon{
+  width:28px;
+  height:28px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.06);
+}
+
+.subnav-right{
+  text-decoration:none;
+  color: rgba(255,255,255,0.88);
+  font-weight:800;
+  padding:8px 12px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+}
+
+.subnav-right:hover{
+  background: rgba(255,255,255,0.10);
+  border-color: rgba(255,255,255,0.20);
+}
+
+/* ---------- Note cards (Finder notes) ---------- */
+.note-card{
+  padding:12px;
+  border:1px solid rgba(255,255,255,0.10);
+  border-radius:16px;
+  background: rgba(255,255,255,0.04);
+}
