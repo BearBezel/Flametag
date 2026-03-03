@@ -684,3 +684,19 @@ label{
   border-radius:16px;
   background: rgba(255,255,255,0.04);
 }
+
+/* ---------- Premium nav polish ---------- */
+.subnav-title{
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.subnav-right.ghost{
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+.subnav-right.ghost:hover{
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.20);
+}
