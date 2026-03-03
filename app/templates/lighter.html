@@ -4,14 +4,13 @@
 <div class="page">
   <div class="page-header">
 
-  <!-- Premium top controls -->
-<div class="subnav" style="margin-bottom:12px;">
-  <a class="subnav-left" href="{{ url_for('main.home') }}">
-    <span class="subnav-icon">🔎</span>
-    <span class="subnav-title">{{ _("Search") }}</span>
+  <div class="subnav" style="margin-bottom:12px;">
+    <a class="subnav-left" href="{{ url_for('main.home') }}">
+      <span class="subnav-icon">🔎</span>
+      <span class="subnav-title">{{ _("Search") }}</span>
   </a>
 
-  <div class="subnav-lang">
+<div class="subnav-lang">
     <select
       class="styled-select styled-select--compact"
       onchange="if(this.value) window.location.href=this.value;"
