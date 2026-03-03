@@ -12,19 +12,17 @@
       Private message + all finder notes are shown here.
     </p>
 
-    <!-- Premium nav buttons -->
-    <div class="btn-row" style="margin-top:14px;">
-      <a class="btn secondary small" href="{{ url_for('main.lighter_page', token=lighter.token) }}"
-         style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:8px;">
-        ← Back to Tag
+    <!-- Premium sub navigation -->
+    <div class="subnav" style="margin-top:14px;">
+      <a class="subnav-left" href="{{ url_for('main.lighter_page', token=lighter.token) }}">
+        <span class="subnav-icon">←</span>
+        <span class="subnav-title">Back to Tag</span>
       </a>
 
-      <a class="btn secondary small" href="{{ url_for('main.home') }}"
-         style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:8px;">
-        🔎 Search
+      <a class="subnav-right ghost" href="{{ url_for('main.home') }}">
+        Search
       </a>
     </div>
-  </div>
 
   <!-- Private owner message -->
   <div class="panel">
