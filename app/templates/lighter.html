@@ -4,32 +4,40 @@
 <div class="page">
   <div class="page-header">
 
-    <!-- Language selector -->
-    <div style="display:flex; justify-content:flex-end; margin-bottom:12px;">
-      <select
-        class="styled-select"
-        onchange="if(this.value) window.location.href=this.value;"
-        style="max-width:220px;"
-      >
-        <option value="">{{ _("Language") }}</option>
-        <option value="{{ url_for('main.set_lang', lang='en') }}">English</option>
-        <option value="{{ url_for('main.set_lang', lang='es') }}">Español</option>
-        <option value="{{ url_for('main.set_lang', lang='fr') }}">Français</option>
-        <option value="{{ url_for('main.set_lang', lang='de') }}">Deutsch</option>
-        <option value="{{ url_for('main.set_lang', lang='it') }}">Italiano</option>
-        <option value="{{ url_for('main.set_lang', lang='pt') }}">Português</option>
-        <option value="{{ url_for('main.set_lang', lang='nl') }}">Nederlands</option>
-        <option value="{{ url_for('main.set_lang', lang='ar') }}">العربية</option>
-        <option value="{{ url_for('main.set_lang', lang='hi') }}">हिन्दी</option>
-        <option value="{{ url_for('main.set_lang', lang='ur') }}">اردو</option>
-        <option value="{{ url_for('main.set_lang', lang='ja') }}">日本語</option>
-        <option value="{{ url_for('main.set_lang', lang='ko') }}">한국어</option>
-        <option value="{{ url_for('main.set_lang', lang='sw') }}">Kiswahili</option>
-        <option value="{{ url_for('main.set_lang', lang='yo') }}">Yorùbá</option>
-        <option value="{{ url_for('main.set_lang', lang='ig') }}">Igbo</option>
-        <option value="{{ url_for('main.set_lang', lang='zh') }}">中文</option>
-      </select>
-    </div>
+   <!-- Premium sub navigation -->
+<div class="subnav" style="margin-bottom:12px;">
+  <a class="subnav-left" href="{{ url_for('main.home') }}">
+    <span class="subnav-icon">🔎</span>
+    <span class="subnav-title">Search</span>
+  </a>
+
+  <div style="min-width:220px;">
+    <select
+      class="styled-select"
+      onchange="if(this.value) window.location.href=this.value;"
+      aria-label="Language"
+    >
+      <option value="">{{ _("Language") }}</option>
+      <option value="{{ url_for('main.set_lang', lang='en') }}">English</option>
+      <option value="{{ url_for('main.set_lang', lang='es') }}">Español</option>
+      <option value="{{ url_for('main.set_lang', lang='fr') }}">Français</option>
+      <option value="{{ url_for('main.set_lang', lang='de') }}">Deutsch</option>
+      <option value="{{ url_for('main.set_lang', lang='it') }}">Italiano</option>
+      <option value="{{ url_for('main.set_lang', lang='pt') }}">Português</option>
+      <option value="{{ url_for('main.set_lang', lang='nl') }}">Nederlands</option>
+      <option value="{{ url_for('main.set_lang', lang='ar') }}">العربية</option>
+      <option value="{{ url_for('main.set_lang', lang='hi') }}">हिन्दी</option>
+      <option value="{{ url_for('main.set_lang', lang='ur') }}">اردو</option>
+      <option value="{{ url_for('main.set_lang', lang='ja') }}">日本語</option>
+      <option value="{{ url_for('main.set_lang', lang='ko') }}">한국어</option>
+      <option value="{{ url_for('main.set_lang', lang='sw') }}">Kiswahili</option>
+      <option value="{{ url_for('main.set_lang', lang='yo') }}">Yorùbá</option>
+      <option value="{{ url_for('main.set_lang', lang='ig') }}">Igbo</option>
+      <option value="{{ url_for('main.set_lang', lang='zh') }}">中文</option>
+    </select>
+  </div>
+</div>
+    
 
     <div class="badge">
       FlameTag • <span class="code">{{ lighter.token }}</span>
