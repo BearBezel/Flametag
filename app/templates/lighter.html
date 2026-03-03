@@ -4,18 +4,18 @@
 <div class="page">
   <div class="page-header">
 
-   <!-- Premium sub navigation -->
+  <!-- Premium top controls -->
 <div class="subnav" style="margin-bottom:12px;">
   <a class="subnav-left" href="{{ url_for('main.home') }}">
     <span class="subnav-icon">🔎</span>
-    <span class="subnav-title">Search</span>
+    <span class="subnav-title">{{ _("Search") }}</span>
   </a>
 
-  <div style="min-width:220px;">
+  <div class="subnav-lang">
     <select
-      class="styled-select"
+      class="styled-select styled-select--compact"
       onchange="if(this.value) window.location.href=this.value;"
-      aria-label="Language"
+      aria-label="{{ _('Language') }}"
     >
       <option value="">{{ _("Language") }}</option>
       <option value="{{ url_for('main.set_lang', lang='en') }}">English</option>
