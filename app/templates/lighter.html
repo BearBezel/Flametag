@@ -131,12 +131,51 @@
           <button class="btn primary" type="submit">{{ _("Unlock messages") }}</button>
           <div class="small-note">{{ _("Only the owner PIN can unlock.") }}</div>
         </form>
-      </div>
+        
+        <div class="small-note" style="margin-top:10px;">
+          <a class="btn secondary small" href="{{ url_for('main.reset_pin_request', token=lighter.token) }}">
+            {{ _("Forgot PIN? Reset by email") }}
+          </a>
+        </div>
 
       <!-- TAB: Edit -->
       <div class="tab-panel hidden" id="tab-edit" style="margin-top:14px;">
 
         {% if session.get('edit_ok_' ~ lighter.token) %}
+        
+<div class="panel" style="margin-bottom:14px;">
+  <div class="panel-title">{{ _("Your FlameTag QR") }}</div>
+
+  <div style="display:flex; align-items:center; gap:18px; flex-wrap:wrap;">
+    <div style="
+      width:160px; height:160px;
+      background:#000;
+      border-radius:16px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+    ">
+      <img
+        src="{{ url_for('main.qr_code', token=lighter.token) }}"
+        alt="QR {{ lighter.token }}"
+        style="width:150px; height:150px;"
+      />
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:10px; min-width:180px;">
+      <a class="btn primary" href="{{ url_for('main.qr_code', token=lighter.token) }}" download>
+        {{ _("Download QR") }}
+      </a>
+      <a class="btn secondary" href="{{ url_for('main.qr_code', token=lighter.token) }}" target="_blank">
+        {{ _("Print QR") }}
+      </a>
+      <div class="small-note">
+        {{ _("Print this QR and attach it to your item.") }}
+      </div>
+    </div>
+  </div>
+</div> 
 
           <div class="section-title">{{ _("Edit your tag") }}</div>
           <div class="small-note" style="margin-bottom:10px;">
@@ -201,6 +240,9 @@
           rows="3"
           placeholder="{{ _('Thanks for finding this — please leave where you found it.') }}"
         ></textarea>
+
+        <label>{{ _("Owner email (for alerts + PIN reset)") }}</label>
+        <input name="owner_email" placeholder="you@email.com" />
 
         <label>{{ _("Choose a PIN (min 4 chars)") }}</label>
         <input name="pin" placeholder="{{ _('Choose a PIN') }}" />
