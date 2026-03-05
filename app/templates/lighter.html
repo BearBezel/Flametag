@@ -189,6 +189,9 @@
             <label>{{ _("Private message") }}</label>
             <textarea name="private_message" rows="3">{{ lighter.private_message }}</textarea>
 
+            <label>{{ _("Owner email (alerts + PIN reset)") }}</label>
+            <input name="owner_email" value="{{ lighter.owner_email or '' }}" placeholder="you@email.com" />
+
             <label>{{ _("Items on this tag (one per line)") }}</label>
             <textarea name="items" rows="5" placeholder="{{ _('Keys\nWallet\nBag\nLighter\nOther') }}">{% if lighter.items and lighter.items|length > 0 %}{% for it in lighter.items %}{{ it.label }}{% if not loop.last %}&#10;{% endif %}{% endfor %}{% endif %}</textarea>
 
