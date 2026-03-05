@@ -4,17 +4,17 @@
 <div class="page">
   <div class="page-header">
 
-  <div class="subnav" style="margin-bottom:12px;">
-    <a class="subnav-left" href="{{ url_for('main.home') }}">
-      <span class="subnav-icon">🔎</span>
-      <span class="subnav-title">{{ _("Search") }}</span>
+ <!-- Premium utility bar -->
+<div class="utility-bar">
+  <a class="utility-left" href="{{ url_for('main.home') }}">
+    <span class="utility-icon">🔎</span>
+    <span class="label">{{ _("Search") }}</span>
   </a>
 
-<div class="subnav-lang">
+  <div class="utility-right select-wrapper">
     <select
-      class="styled-select styled-select--compact"
+      class="styled-select"
       onchange="if(this.value) window.location.href=this.value;"
-      aria-label="{{ _('Language') }}"
     >
       <option value="">{{ _("Language") }}</option>
       <option value="{{ url_for('main.set_lang', lang='en') }}">English</option>
