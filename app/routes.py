@@ -1,18 +1,61 @@
 import os
 import secrets
+import smtplib
+from email.mime.text import MIMEText
 from datetime import datetime
 
 from flask import (
     Blueprint, render_template, request, redirect, url_for,
-    flash, abort, session, make_response
+    flash, abort, session, make_response, current_app
 )
 from werkzeug.security import generate_password_hash, check_password_hash
+from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
 
 from . import db
 from .models import Lighter, LighterItem, FoundMessage
 
 bp = Blueprint("main", __name__)
 
+
+# ---------------- Email helpers ----------------
+def _email_enabled() -> bool:
+    return bool(os.getenv("SMTP_HOST") and os.getenv("SMTP_USER") and os.getenv("SMTP_PASS") and os.getenv("SMTP_FROM"))
+
+def send_email(to_email: str, subject: str, body: str) -> bool:
+    """
+    Uses SMTP settings from env vars:
+    SMTP_HOST, SMTP_PORT (optional), SMTP_USER, SMTP_PASS, SMTP_FROM
+    """
+    if not _email_enabled():
+        return False
+
+    host = os.getenv("SMTP_HOST")
+    port = int(os.getenv("SMTP_PORT", "587"))
+    user = os.getenv("SMTP_USER")
+    pwd = os.getenv("SMTP_PASS")
+    from_email = os.getenv("SMTP_FROM")
+
+    msg = MIMEText(body, "plain", "utf-8")
+    msg["Subject"] = subject
+    msg["From"] = from_email
+    msg["To"] = to_email
+
+    try:
+        server = smtplib.SMTP(host, port, timeout=15)
+        server.starttls()
+        server.login(user, pwd)
+        server.sendmail(from_email, [to_email], msg.as_string())
+        server.quit()
+        return True
+    except Exception:
+        return False
+
+
+def make_serializer() -> URLSafeTimedSerializer:
+    return URLSafeTimedSerializer(current_app.config["SECRET_KEY"], salt="flametag-pin-reset")
+
+
+# ---------------- Tag generator ----------------
 @bp.post("/generate")
 def generate_tag():
     """
@@ -21,13 +64,11 @@ def generate_tag():
     """
     existing = session.get("generated_token")
     if existing:
-        # If it still exists in DB, reuse it
         if Lighter.query.filter_by(token=existing).first():
             return redirect(url_for("main.lighter_page", token=existing))
 
-    # Create a fresh token
     alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
-    for _ in range(20):  # try a few times to avoid collisions
+    for _ in range(20):
         token = "".join(secrets.choice(alphabet) for _ in range(8))
         if not Lighter.query.filter_by(token=token).first():
             l = Lighter(token=token)
@@ -40,19 +81,21 @@ def generate_tag():
     flash("Could not generate a tag right now. Please try again.", "err")
     return redirect(url_for("main.home"))
 
+
+# ---------------- Language ----------------
 @bp.get("/set-lang/<lang>")
 def set_lang(lang):
     supported = {
         "en","es","fr","de","it","pt","nl",
         "ar","hi","ur","ja","ko","sw","yo","ig","zh"
     }
-
     if lang not in supported:
         lang = "en"
 
-    resp = make_response(redirect(request.referrer or url_for("main.index")))
-    resp.set_cookie("lang", lang, max_age=60 * 60 * 24 * 365)  # 1 year
+    resp = make_response(redirect(request.referrer or url_for("main.home")))
+    resp.set_cookie("lang", lang, max_age=60 * 60 * 24 * 365)
     return resp
+
 
 # ---------------- Admin lock helpers ----------------
 def admin_authed() -> bool:
@@ -74,7 +117,6 @@ def get_or_404(token: str) -> Lighter:
 
 
 def ensure_default_items(lighter: Lighter):
-    """If owner hasn't set items yet, create defaults."""
     if lighter.items and len(lighter.items) > 0:
         return
 
@@ -115,12 +157,15 @@ def claim_lighter(token):
     lighter = get_or_404(token)
 
     if lighter.is_claimed():
-        flash("This lighter is already claimed.", "err")
+        flash("This tag is already claimed.", "err")
         return redirect(url_for("main.lighter_page", token=token))
 
     public_message = (request.form.get("public_message") or "").strip()
     private_message = (request.form.get("private_message") or "").strip()
     pin = (request.form.get("pin") or "").strip()
+
+    # NEW: owner email (optional but recommended)
+    owner_email = (request.form.get("owner_email") or "").strip().lower()
 
     if len(pin) < 4:
         flash("Pick a PIN with at least 4 digits/characters.", "err")
@@ -132,10 +177,14 @@ def claim_lighter(token):
     lighter.claimed_at = datetime.utcnow()
     lighter.updated_at = datetime.utcnow()
 
+    # Save email if provided
+    if owner_email:
+        lighter.owner_email = owner_email
+
     db.session.commit()
     ensure_default_items(lighter)
 
-    flash("Claimed! Your message is now linked to this tag.", "ok")
+    flash("Claimed! You can now download your QR in Edit.", "ok")
     return redirect(url_for("main.lighter_page", token=token))
 
 
@@ -147,22 +196,23 @@ def edit_lighter(token):
         flash("Claim it first.", "err")
         return redirect(url_for("main.lighter_page", token=token))
 
-    # Must unlock edit first (via /l/<token>/edit/unlock)
     if not session.get(f"edit_ok_{token}"):
         flash("Owner PIN required to edit.", "err")
-        return redirect(url_for("main.lighter_page", token=token) + "#tab-edit")    
+        return redirect(url_for("main.lighter_page", token=token) + "#tab-edit")
+
     public_message = (request.form.get("public_message") or "").strip()
     private_message = (request.form.get("private_message") or "").strip()
+    owner_email = (request.form.get("owner_email") or "").strip().lower()
 
     if public_message:
         lighter.public_message = public_message
     if private_message:
         lighter.private_message = private_message
+    if owner_email:
+        lighter.owner_email = owner_email
 
-    # NEW: items editor (one per line)
     items_text = (request.form.get("items") or "").strip()
     if items_text:
-        # clear + re-add
         LighterItem.query.filter_by(lighter_id=lighter.id).delete()
         lines = [x.strip() for x in items_text.splitlines() if x.strip()]
         for label in lines[:20]:
@@ -173,6 +223,7 @@ def edit_lighter(token):
 
     flash("Updated.", "ok")
     return redirect(url_for("main.lighter_page", token=token))
+
 
 @bp.post("/l/<token>/edit/unlock")
 def edit_unlock(token):
@@ -192,21 +243,18 @@ def edit_unlock(token):
     return redirect(url_for("main.lighter_page", token=token) + "#tab-edit")
 
 
-# ---------------- Finder -> leave a private message ----------------
+# ---------------- Finder -> leave a message (EMAIL ALERT) ----------------
 @bp.post("/l/<token>/found")
 def found_lighter(token):
     lighter = get_or_404(token)
 
     note = (request.form.get("found_note") or "").strip()
-
     if not note:
         flash("Please add a short note (where you found it).", "err")
         return redirect(url_for("main.lighter_page", token=token))
 
     item_id = request.form.get("item_id")
-
     item_label = "General"
-
     if item_id:
         item = next((it for it in lighter.items if str(it.id) == item_id), None)
         if item:
@@ -226,12 +274,22 @@ def found_lighter(token):
         )
     )
 
-    # keep these updated (optional)
     lighter.found_at = datetime.utcnow()
     lighter.found_note = note
     lighter.updated_at = datetime.utcnow()
-
     db.session.commit()
+
+    # EMAIL ALERT to owner (if email exists + SMTP configured)
+    if lighter.has_owner_email() and _email_enabled():
+        subject = f"FlameTag: Someone found your item ({lighter.token})"
+        body = (
+            f"Someone left a note for your FlameTag {lighter.token}.\n\n"
+            f"Item: {item_label}\n"
+            f"Note:\n{note}\n\n"
+            f"Open your tag:\nhttps://flametag.app/l/{lighter.token}\n\n"
+            f"To read all messages, unlock with your PIN."
+        )
+        send_email(lighter.owner_email, subject, body)
 
     flash("Thanks — your message has been saved for the owner.", "ok")
     return redirect(url_for("main.lighter_page", token=token))
@@ -251,7 +309,6 @@ def unlock_private(token):
         flash("Wrong PIN.", "err")
         return redirect(url_for("main.lighter_page", token=token))
 
-    # Fetch all messages (newest first)
     found_messages = (
         FoundMessage.query
         .filter_by(lighter_id=lighter.id)
@@ -259,12 +316,109 @@ def unlock_private(token):
         .all()
     )
 
-    # Mark as read when owner opens messages
     FoundMessage.query.filter_by(lighter_id=lighter.id, is_read=False).update({"is_read": True})
     db.session.commit()
 
     flash("Unlocked.", "ok")
     return render_template("unlocked.html", lighter=lighter, found_messages=found_messages)
+
+
+# ---------------- PIN reset (EMAIL LINK) ----------------
+@bp.get("/l/<token>/reset-pin")
+def reset_pin_request(token):
+    lighter = get_or_404(token)
+    return render_template("reset_pin_request.html", lighter=lighter)
+
+
+@bp.post("/l/<token>/reset-pin")
+def reset_pin_send(token):
+    lighter = get_or_404(token)
+    email = (request.form.get("email") or "").strip().lower()
+
+    if not email:
+        flash("Enter the email you saved for this tag.", "err")
+        return redirect(url_for("main.reset_pin_request", token=token))
+
+    if not lighter.owner_email or lighter.owner_email.strip().lower() != email:
+        flash("That email doesn't match this tag.", "err")
+        return redirect(url_for("main.reset_pin_request", token=token))
+
+    if not _email_enabled():
+        flash("Email reset is not configured yet (SMTP).", "err")
+        return redirect(url_for("main.reset_pin_request", token=token))
+
+    s = make_serializer()
+    signed = s.dumps({"token": token, "email": email})
+
+    link = url_for("main.reset_pin_form", signed=signed, _external=True)
+
+    subject = f"FlameTag: Reset PIN ({token})"
+    body = (
+        f"Use this link to reset your FlameTag PIN:\n\n{link}\n\n"
+        f"This link expires in 30 minutes.\n"
+        f"If you didn't request this, you can ignore this email."
+    )
+
+    ok = send_email(email, subject, body)
+    if ok:
+        flash("Reset link sent to your email.", "ok")
+    else:
+        flash("Could not send email. Try again.", "err")
+
+    return redirect(url_for("main.lighter_page", token=token))
+
+
+@bp.get("/reset-pin/<signed>")
+def reset_pin_form(signed):
+    s = make_serializer()
+    try:
+        data = s.loads(signed, max_age=60 * 30)  # 30 minutes
+    except SignatureExpired:
+        flash("Reset link expired. Request another.", "err")
+        return redirect(url_for("main.home"))
+    except BadSignature:
+        flash("Invalid reset link.", "err")
+        return redirect(url_for("main.home"))
+
+    token = data.get("token")
+    lighter = get_or_404(token)
+    return render_template("reset_pin_form.html", lighter=lighter, signed=signed)
+
+
+@bp.post("/reset-pin/<signed>")
+def reset_pin_save(signed):
+    s = make_serializer()
+    try:
+        data = s.loads(signed, max_age=60 * 30)
+    except SignatureExpired:
+        flash("Reset link expired. Request another.", "err")
+        return redirect(url_for("main.home"))
+    except BadSignature:
+        flash("Invalid reset link.", "err")
+        return redirect(url_for("main.home"))
+
+    token = data.get("token")
+    email = data.get("email")
+    lighter = get_or_404(token)
+
+    if not lighter.owner_email or lighter.owner_email.strip().lower() != (email or "").lower():
+        flash("Email mismatch.", "err")
+        return redirect(url_for("main.home"))
+
+    new_pin = (request.form.get("pin") or "").strip()
+    if len(new_pin) < 4:
+        flash("PIN must be at least 4 characters.", "err")
+        return redirect(url_for("main.reset_pin_form", signed=signed))
+
+    lighter.owner_pin_hash = generate_password_hash(new_pin)
+    lighter.updated_at = datetime.utcnow()
+    db.session.commit()
+
+    # clear edit sessions
+    session.pop(f"edit_ok_{token}", None)
+
+    flash("PIN reset successfully. Use your new PIN to unlock.", "ok")
+    return redirect(url_for("main.lighter_page", token=token))
 
 
 # ---------------- Admin pages ----------------
@@ -342,7 +496,6 @@ from flask import send_file
 @bp.get("/qr/<token>")
 def qr_code(token):
     lighter = Lighter.query.filter_by(token=token).first_or_404()
-
     url = f"https://flametag.app/l/{token}"
 
     qr = qrcode.QRCode(version=1, box_size=10, border=2)
@@ -356,3 +509,4 @@ def qr_code(token):
     buf.seek(0)
 
     return send_file(buf, mimetype="image/png")
+ 
