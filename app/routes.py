@@ -12,6 +12,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
 
 from . import db
+from sqlalchemy import text
 from .models import Lighter, LighterItem, FoundMessage
 
 bp = Blueprint("main", __name__)
@@ -420,6 +421,19 @@ def reset_pin_save(signed):
     flash("PIN reset successfully. Use your new PIN to unlock.", "ok")
     return redirect(url_for("main.lighter_page", token=token))
 
+# ---------------- TEMP DB FIX ----------------
+@bp.get("/admin/db-fix-owner-email")
+def admin_db_fix_owner_email():
+    require_admin()
+
+    db.session.execute(text("""
+        ALTER TABLE lighters
+        ADD COLUMN IF NOT EXISTS owner_email VARCHAR(120);
+    """))
+    db.session.commit()
+
+    flash("DB fixed: owner_email column added.", "ok")
+    return redirect(url_for("main.admin"))
 
 # ---------------- Admin pages ----------------
 @bp.get("/admin")
