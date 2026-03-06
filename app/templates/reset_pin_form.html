@@ -4,28 +4,24 @@
 <div class="page">
   <div class="page-header">
     <div class="badge">
-      Reset PIN • <span class="code">{{ lighter.token }}</span>
+      New PIN • <span class="code">{{ lighter.token }}</span>
     </div>
 
-    <h1 class="page-title" style="margin-top:14px;">Reset your owner PIN</h1>
+    <h1 class="page-title" style="margin-top:14px;">Set a new PIN</h1>
     <p class="page-subtitle">
-      Enter the email saved on this tag. We’ll send you a reset link.
+      Choose a new PIN (min 4 characters).
     </p>
   </div>
 
   <div class="panel">
     <form method="post" class="stack">
-      <label>Email on this tag</label>
-      <input name="email" placeholder="you@email.com" />
-      <button class="btn primary" type="submit">Send reset link</button>
+      <label>New PIN</label>
+      <input name="pin" placeholder="New PIN" />
+      <button class="btn primary" type="submit">Save new PIN</button>
       <div class="small-note">
-        Link expires in 30 minutes.
+        After saving, use it to unlock Messages / Edit.
       </div>
     </form>
-  </div>
-
-  <div class="btn-row" style="margin-top:14px;">
-    <a class="btn secondary" href="{{ url_for('main.lighter_page', token=lighter.token) }}">Back to Tag</a>
   </div>
 </div>
 
