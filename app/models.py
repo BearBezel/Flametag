@@ -13,6 +13,7 @@ class Lighter(db.Model):
 
     public_message = db.Column(db.Text, nullable=True)
     private_message = db.Column(db.Text, nullable=True)
+    owner_email = db.Column(db.String(120), nullable=True)
 
     scan_count = db.Column(db.Integer, nullable=False, default=0)
 
@@ -34,6 +35,8 @@ class Lighter(db.Model):
     def is_claimed(self) -> bool:
         return self.claimed_at is not None
 
+    def has_owner_email(self) -> bool:
+        return bool(self.owner_email and self.owner_email.strip())
 
 class LighterItem(db.Model):
     __tablename__ = "lighter_items"
