@@ -319,19 +319,31 @@
       btn.addEventListener("click", () => showTab(btn.dataset.tab));
     });
 
-    window.toggleLangMenu = function () {
-      const menu = document.getElementById("langDropdown");
-      if (menu) menu.classList.toggle("hidden");
-    };
+   window.toggleLangMenu = function () {
+  const menu = document.getElementById("langDropdown");
+  if (!menu) return;
 
-    document.addEventListener("click", function(e){
-      const menu = document.getElementById("langDropdown");
-      const langWrap = document.querySelector(".lang-menu");
-      if (!menu || !langWrap) return;
-      if (!langWrap.contains(e.target)) {
-        menu.classList.add("hidden");
-      }
-    });
+  menu.classList.toggle("hidden");
+};
+
+document.addEventListener("click", function(e) {
+  const menu = document.getElementById("langDropdown");
+  const langWrap = document.querySelector(".lang-menu");
+
+  if (!menu || !langWrap) return;
+
+  if (!langWrap.contains(e.target)) {
+    menu.classList.add("hidden");
+  }
+});
+
+/* Close menu after selecting a language */
+document.querySelectorAll("#langDropdown a").forEach(link => {
+  link.addEventListener("click", () => {
+    const menu = document.getElementById("langDropdown");
+    if (menu) menu.classList.add("hidden");
+  });
+});
 
     showTab("tab-found");
   })();
