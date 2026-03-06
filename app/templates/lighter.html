@@ -4,39 +4,38 @@
 <div class="page">
   <div class="page-header">
 
- <!-- Premium utility bar -->
-<div class="utility-bar">
-  <a class="utility-left" href="{{ url_for('main.home') }}">
-    <span class="utility-icon">🔎</span>
-    <span class="label">{{ _("Search") }}</span>
-  </a>
+    <!-- Premium utility bar -->
+    <div class="utility-bar">
+      <a class="utility-left" href="{{ url_for('main.home') }}">
+        <span class="utility-icon">🔎</span>
+        <span class="label">{{ _("Search") }}</span>
+      </a>
 
-  <div class="utility-right select-wrapper">
-    <select
-      class="styled-select"
-      onchange="if(this.value) window.location.href=this.value;"
-    >
-      <option value="">{{ _("Language") }}</option>
-      <option value="{{ url_for('main.set_lang', lang='en') }}">English</option>
-      <option value="{{ url_for('main.set_lang', lang='es') }}">Español</option>
-      <option value="{{ url_for('main.set_lang', lang='fr') }}">Français</option>
-      <option value="{{ url_for('main.set_lang', lang='de') }}">Deutsch</option>
-      <option value="{{ url_for('main.set_lang', lang='it') }}">Italiano</option>
-      <option value="{{ url_for('main.set_lang', lang='pt') }}">Português</option>
-      <option value="{{ url_for('main.set_lang', lang='nl') }}">Nederlands</option>
-      <option value="{{ url_for('main.set_lang', lang='ar') }}">العربية</option>
-      <option value="{{ url_for('main.set_lang', lang='hi') }}">हिन्दी</option>
-      <option value="{{ url_for('main.set_lang', lang='ur') }}">اردو</option>
-      <option value="{{ url_for('main.set_lang', lang='ja') }}">日本語</option>
-      <option value="{{ url_for('main.set_lang', lang='ko') }}">한국어</option>
-      <option value="{{ url_for('main.set_lang', lang='sw') }}">Kiswahili</option>
-      <option value="{{ url_for('main.set_lang', lang='yo') }}">Yorùbá</option>
-      <option value="{{ url_for('main.set_lang', lang='ig') }}">Igbo</option>
-      <option value="{{ url_for('main.set_lang', lang='zh') }}">中文</option>
-    </select>
-  </div>
-</div>
-    
+      <div class="utility-right select-wrapper">
+        <select
+          class="styled-select"
+          onchange="if(this.value) window.location.href=this.value;"
+        >
+          <option value="">{{ _("Language") }}</option>
+          <option value="{{ url_for('main.set_lang', lang='en') }}">English</option>
+          <option value="{{ url_for('main.set_lang', lang='es') }}">Español</option>
+          <option value="{{ url_for('main.set_lang', lang='fr') }}">Français</option>
+          <option value="{{ url_for('main.set_lang', lang='de') }}">Deutsch</option>
+          <option value="{{ url_for('main.set_lang', lang='it') }}">Italiano</option>
+          <option value="{{ url_for('main.set_lang', lang='pt') }}">Português</option>
+          <option value="{{ url_for('main.set_lang', lang='nl') }}">Nederlands</option>
+          <option value="{{ url_for('main.set_lang', lang='ar') }}">العربية</option>
+          <option value="{{ url_for('main.set_lang', lang='hi') }}">हिन्दी</option>
+          <option value="{{ url_for('main.set_lang', lang='ur') }}">اردو</option>
+          <option value="{{ url_for('main.set_lang', lang='ja') }}">日本語</option>
+          <option value="{{ url_for('main.set_lang', lang='ko') }}">한국어</option>
+          <option value="{{ url_for('main.set_lang', lang='sw') }}">Kiswahili</option>
+          <option value="{{ url_for('main.set_lang', lang='yo') }}">Yorùbá</option>
+          <option value="{{ url_for('main.set_lang', lang='ig') }}">Igbo</option>
+          <option value="{{ url_for('main.set_lang', lang='zh') }}">中文</option>
+        </select>
+      </div>
+    </div>
 
     <div class="badge">
       FlameTag • <span class="code">{{ lighter.token }}</span>
@@ -53,7 +52,7 @@
     </p>
   </div>
 
-  <!-- Public message (always visible) -->
+  <!-- Public message -->
   <div class="panel">
     <div class="section-title">{{ _("Public message") }}</div>
     <div class="big-message" style="white-space: pre-wrap;">
@@ -63,7 +62,7 @@
 
   {% if lighter.claimed_at %}
 
-    <!-- Tabs wrapper (only when claimed) -->
+    <!-- Tabs wrapper -->
     <div class="panel" style="margin-top:14px;">
 
       <div class="btn-row" style="gap:10px;">
@@ -91,7 +90,6 @@
         </div>
 
         <form method="post" action="{{ url_for('main.found_lighter', token=lighter.token) }}" class="stack">
-
           <label>{{ _("Which item did you find?") }}</label>
           <div class="select-wrapper">
             <select name="item_id" class="styled-select">
@@ -118,7 +116,7 @@
         </form>
       </div>
 
-      <!-- TAB: Messages (owner unlock) -->
+      <!-- TAB: Messages -->
       <div class="tab-panel hidden" id="tab-unlock" style="margin-top:14px;">
         <div class="section-title">{{ _("Owner messages") }}</div>
         <div class="small-note" style="margin-bottom:10px;">
@@ -131,51 +129,52 @@
           <button class="btn primary" type="submit">{{ _("Unlock messages") }}</button>
           <div class="small-note">{{ _("Only the owner PIN can unlock.") }}</div>
         </form>
-        
+
         <div class="small-note" style="margin-top:10px;">
           <a class="btn secondary small" href="{{ url_for('main.reset_pin_request', token=lighter.token) }}">
             {{ _("Forgot PIN? Reset by email") }}
           </a>
         </div>
+      </div>
 
       <!-- TAB: Edit -->
       <div class="tab-panel hidden" id="tab-edit" style="margin-top:14px;">
 
         {% if session.get('edit_ok_' ~ lighter.token) %}
-        
-<div class="panel" style="margin-bottom:14px;">
-  <div class="panel-title">{{ _("Your FlameTag QR") }}</div>
 
-  <div style="display:flex; align-items:center; gap:18px; flex-wrap:wrap;">
-    <div style="
-      width:160px; height:160px;
-      background:#000;
-      border-radius:16px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      overflow:hidden;
-    ">
-      <img
-        src="{{ url_for('main.qr_code', token=lighter.token) }}"
-        alt="QR {{ lighter.token }}"
-        style="width:150px; height:150px;"
-      />
-    </div>
+          <div class="panel" style="margin-bottom:14px;">
+            <div class="panel-title">{{ _("Your FlameTag QR") }}</div>
 
-    <div style="display:flex; flex-direction:column; gap:10px; min-width:180px;">
-      <a class="btn primary" href="{{ url_for('main.qr_code', token=lighter.token) }}" download>
-        {{ _("Download QR") }}
-      </a>
-      <a class="btn secondary" href="{{ url_for('main.qr_code', token=lighter.token) }}" target="_blank">
-        {{ _("Print QR") }}
-      </a>
-      <div class="small-note">
-        {{ _("Print this QR and attach it to your item.") }}
-      </div>
-    </div>
-  </div>
-</div> 
+            <div style="display:flex; align-items:center; gap:18px; flex-wrap:wrap;">
+              <div style="
+                width:160px; height:160px;
+                background:#000;
+                border-radius:16px;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                overflow:hidden;
+              ">
+                <img
+                  src="{{ url_for('main.qr_code', token=lighter.token) }}"
+                  alt="QR {{ lighter.token }}"
+                  style="width:150px; height:150px;"
+                />
+              </div>
+
+              <div style="display:flex; flex-direction:column; gap:10px; min-width:180px;">
+                <a class="btn primary" href="{{ url_for('main.qr_code', token=lighter.token) }}" download>
+                  {{ _("Download QR") }}
+                </a>
+                <a class="btn secondary" href="{{ url_for('main.qr_code', token=lighter.token) }}" target="_blank">
+                  {{ _("Print QR") }}
+                </a>
+                <div class="small-note">
+                  {{ _("Print this QR and attach it to your item.") }}
+                </div>
+              </div>
+            </div>
+          </div>
 
           <div class="section-title">{{ _("Edit your tag") }}</div>
           <div class="small-note" style="margin-bottom:10px;">
@@ -212,6 +211,12 @@
             <div class="small-note">{{ _("Only the owner PIN can unlock editing.") }}</div>
           </form>
 
+          <div class="small-note" style="margin-top:10px;">
+            <a class="btn secondary small" href="{{ url_for('main.reset_pin_request', token=lighter.token) }}">
+              {{ _("Forgot PIN? Reset by email") }}
+            </a>
+          </div>
+
         {% endif %}
 
       </div>
@@ -222,7 +227,7 @@
 
   {% else %}
 
-    <!-- Not claimed yet -->
+    <!-- Not claimed -->
     <div class="panel" style="margin-top:14px;">
       <div class="section-title">{{ _("Tag this item") }}</div>
       <p class="page-subtitle" style="margin-top:6px;">
