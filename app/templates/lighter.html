@@ -305,13 +305,16 @@
     const btns = document.querySelectorAll(".tab-segment");
 
     function showTab(id) {
-      document.querySelectorAll(".tab-panel").forEach(p => p.classList.add("hidden"));
-      const panel = document.getElementById(id);
-      if (panel) panel.classList.remove("hidden");
+      document.querySelectorAll(".tab-panel").forEach(panel => {
+        panel.classList.add("hidden");
+      });
 
-      btns.forEach(b => b.classList.remove("active"));
-      btns.forEach(b => {
-        if (b.dataset.tab === id) b.classList.add("active");
+      const activePanel = document.getElementById(id);
+      if (activePanel) activePanel.classList.remove("hidden");
+
+      btns.forEach(btn => btn.classList.remove("active"));
+      btns.forEach(btn => {
+        if (btn.dataset.tab === id) btn.classList.add("active");
       });
     }
 
@@ -319,34 +322,41 @@
       btn.addEventListener("click", () => showTab(btn.dataset.tab));
     });
 
-   window.toggleLangMenu = function () {
-  const menu = document.getElementById("langDropdown");
-  if (!menu) return;
+    // Language dropdown
+    const langBtn = document.getElementById("langToggleBtn");
+    const langMenu = document.getElementById("langDropdown");
+    const langWrap = document.querySelector(".lang-menu");
 
-  menu.classList.toggle("hidden");
-};
+    if (langBtn && langMenu && langWrap) {
+      langBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        langMenu.classList.toggle("hidden");
+      });
 
-document.addEventListener("click", function(e) {
-  const menu = document.getElementById("langDropdown");
-  const langWrap = document.querySelector(".lang-menu");
+      langMenu.addEventListener("click", function (e) {
+        e.stopPropagation();
+      });
 
-  if (!menu || !langWrap) return;
+      document.querySelectorAll("#langDropdown a").forEach(link => {
+        link.addEventListener("click", function () {
+          langMenu.classList.add("hidden");
+        });
+      });
 
-  if (!langWrap.contains(e.target)) {
-    menu.classList.add("hidden");
-  }
-});
+      document.addEventListener("click", function (e) {
+        if (!langWrap.contains(e.target)) {
+          langMenu.classList.add("hidden");
+        }
+      });
 
-/* Close menu after selecting a language */
-document.querySelectorAll("#langDropdown a").forEach(link => {
-  link.addEventListener("click", () => {
-    const menu = document.getElementById("langDropdown");
-    if (menu) menu.classList.add("hidden");
-  });
-});
+      document.addEventListener("touchstart", function (e) {
+        if (!langWrap.contains(e.target)) {
+          langMenu.classList.add("hidden");
+        }
+      });
+    }
 
     showTab("tab-found");
   })();
 </script>
-
-{% endblock %}
