@@ -1062,3 +1062,14 @@ label{
   color: rgba(255,255,255,0.96);
   margin-bottom: 12px;
 }  
+  
+.note-card{
+  padding:14px 16px;
+  border:1px solid rgba(255,255,255,0.10);
+  border-radius:16px;
+  background: rgba(255,255,255,0.03);
+}
+
+.note-card + .note-card{
+  margin-top:12px;
+}
