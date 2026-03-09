@@ -322,7 +322,6 @@
       btn.addEventListener("click", () => showTab(btn.dataset.tab));
     });
 
-    // Language dropdown
     const langBtn = document.getElementById("langToggleBtn");
     const langMenu = document.getElementById("langDropdown");
     const langWrap = document.querySelector(".lang-menu");
@@ -331,11 +330,12 @@
       langBtn.addEventListener("click", function (e) {
         e.preventDefault();
         e.stopPropagation();
-        langMenu.classList.toggle("hidden");
-      });
 
-      langMenu.addEventListener("click", function (e) {
-        e.stopPropagation();
+        if (langMenu.classList.contains("hidden")) {
+          langMenu.classList.remove("hidden");
+        } else {
+          langMenu.classList.add("hidden");
+        }
       });
 
       document.querySelectorAll("#langDropdown a").forEach(link => {
