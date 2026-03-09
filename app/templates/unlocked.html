@@ -12,19 +12,16 @@
       Private message + all finder notes are shown here.
     </p>
 
-    <!-- Premium sub navigation -->
     <div class="subnav" style="margin-top:14px;">
       <a class="subnav-left" href="{{ url_for('main.lighter_page', token=lighter.token) }}">
         <span class="subnav-icon">←</span>
         <span class="subnav-title">Back to Tag</span>
       </a>
 
-      <a class="subnav-right ghost" href="{{ url_for('main.home') }}">
-        Search
-      </a>
+      <a class="subnav-right ghost" href="{{ url_for('main.home') }}">Search</a>
     </div>
+  </div>
 
-  <!-- Private owner message -->
   <div class="panel">
     <div class="panel-title">Private message</div>
     <div class="big-message" style="white-space: pre-wrap;">
@@ -32,47 +29,29 @@
     </div>
   </div>
 
-  <!-- Finder notes -->
   <div class="panel" style="margin-top:14px;">
-    <div class="panel-title">Finder notes</div>
+    <div class="panel-title">Finder messages</div>
 
     {% if found_messages and found_messages|length > 0 %}
-      <div class="stack">
+      <div class="chat-stack">
         {% for m in found_messages %}
-          <div style="padding:14px; border:1px solid rgba(255,255,255,0.10); border-radius:16px; background: rgba(255,255,255,0.03);">
-            
-            <!-- Item label chip + time -->
-            <div style="display:flex; justify-content:space-between; gap:10px; align-items:center; margin-bottom:10px;">
-              <div style="display:inline-flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                <span style="padding:6px 10px; border-radius:999px; font-size:12px; font-weight:800;
-                             border:1px solid rgba(255,255,255,0.14); background: rgba(255,255,255,0.06);">
-                  {{ m.item_label or "General" }}
-                </span>
-
-                {% if m.finder_name %}
-                  <span style="font-size:12px; color: rgba(255,255,255,0.75);">
-                    • {{ m.finder_name }}
-                  </span>
-                {% endif %}
-              </div>
-
-              <div style="font-size:12px; color: rgba(255,255,255,0.55);">
-                {{ m.created_at }}
-              </div>
+          <div class="note-card">
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:8px;">
+              <span class="code">{{ m.item_label or "General" }}</span>
+              <span class="small-note" style="margin:0;">{{ m.created_at }}</span>
             </div>
 
-            <!-- Note -->
-            <div class="big-message" style="margin:0; white-space: pre-wrap;">
+            <div class="chat-text" style="white-space:pre-wrap;">
               {{ m.note }}
             </div>
 
-            <!-- Contact (optional) -->
-            {% if m.finder_contact %}
-              <div class="small-note" style="margin-top:10px;">
-                Contact: <span style="color: rgba(255,255,255,0.85); font-weight:700;">{{ m.finder_contact }}</span>
+            {% if m.finder_name or m.finder_contact %}
+              <div class="small-note" style="margin-top:8px;">
+                {% if m.finder_name %}{{ m.finder_name }}{% endif %}
+                {% if m.finder_name and m.finder_contact %} • {% endif %}
+                {% if m.finder_contact %}{{ m.finder_contact }}{% endif %}
               </div>
             {% endif %}
-
           </div>
         {% endfor %}
       </div>
