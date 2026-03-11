@@ -1152,3 +1152,143 @@ label{
   color:rgba(255,255,255,0.96);
   margin-bottom:12px;
 }  
+
+/* ===== Emoji-only top actions ===== */
+.top-mini-actions{
+  position:absolute;
+  top:12px;
+  right:12px;
+  display:flex;
+  gap:12px;
+  align-items:center;
+  z-index:50;
+}
+
+.mini-emoji-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+  line-height:1;
+  text-decoration:none;
+  color:#fff;
+  background:none;
+  border:none;
+  padding:0;
+  cursor:pointer;
+  list-style:none;
+}
+
+.mini-emoji-btn:hover{
+  transform:scale(1.06);
+}
+
+.lang-menu{
+  position:relative;
+}
+
+.lang-menu summary{
+  list-style:none;
+}
+
+.lang-menu summary::-webkit-details-marker{
+  display:none;
+}
+
+.lang-dropdown{
+  position:absolute;
+  right:0;
+  top:32px;
+  width:180px;
+  border-radius:16px;
+  padding:8px 0;
+  background:rgba(20,20,30,0.96);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,0.08);
+  box-shadow:0 10px 30px rgba(0,0,0,0.4);
+  display:none;
+  flex-direction:column;
+  z-index:100;
+}
+
+.lang-menu[open] .lang-dropdown{
+  display:flex;
+}
+
+.lang-dropdown a{
+  padding:10px 16px;
+  text-decoration:none;
+  color:white;
+  font-size:15px;
+}
+
+.lang-dropdown a:hover{
+  background:rgba(255,255,255,0.06);
+}
+
+/* ===== Loading screen ===== */
+#loadingScreen{
+  position:fixed;
+  inset:0;
+  background:#060b18;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+  transition:opacity 0.4s ease;
+}
+
+.loading-inner{
+  text-align:center;
+  color:white;
+}
+
+.flame{
+  font-size:34px;
+}
+
+.loading-title{
+  font-size:28px;
+  font-weight:800;
+  margin-top:10px;
+}
+
+.loading-sub{
+  opacity:0.72;
+  font-size:14px;
+  margin-top:6px;
+}
+
+/* ===== Explainer ===== */
+.finder-explainer{
+  margin:12px auto 0;
+  max-width:560px;
+  font-size:15px;
+  line-height:1.5;
+  color:rgba(255,255,255,0.82);
+}
+
+.flametag-info{
+  font-size:13px;
+  opacity:0.78;
+  margin-top:12px;
+  line-height:1.5;
+}
+
+/* ===== Public title ===== */
+.public-title{
+  font-size:18px;
+  font-weight:800;
+  letter-spacing:-0.01em;
+  text-transform:none;
+  color:rgba(255,255,255,0.96);
+  margin-bottom:12px;
+}
+
+/* ===== Active tab highlight ===== */
+.tab-segment.active{
+  background:linear-gradient(135deg,#3b82f6,#2563eb);
+  color:#fff;
+  border-color:transparent;
+  box-shadow:0 0 12px rgba(59,130,246,0.35);
+}  
