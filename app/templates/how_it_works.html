@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="page">
+  <div class="page-header">
+    <div class="badge">🔥 FlameTag</div>
+    <h1 class="page-title" style="margin-top:14px;">How FlameTag works</h1>
+    <p class="page-subtitle">
+      FlameTag helps lost items return to their owners with a simple QR code.
+    </p>
+  </div>
+
+  <div class="panel">
+    <div class="section-title public-title">What is FlameTag?</div>
+    <div class="big-message" style="white-space: pre-wrap;">
+      FlameTag is a smart QR sticker system for lost items.
+
+      Attach a FlameTag sticker to your item.
+      If someone finds it, they scan the QR code and can message the owner instantly.
+
+      No app required.
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top:14px;">
+    <div class="section-title public-title">How it works</div>
+
+    <div class="stack" style="margin-top:12px;">
+      <div class="note-card">
+        <div class="panel-title" style="margin-bottom:8px;">1. Attach your FlameTag</div>
+        <div class="chat-text">
+          Put the QR sticker on your keys, bag, luggage, bike, wallet, or other item.
+        </div>
+      </div>
+
+      <div class="note-card">
+        <div class="panel-title" style="margin-bottom:8px;">2. Someone finds your item</div>
+        <div class="chat-text">
+          The finder scans the QR code with their phone camera.
+        </div>
+      </div>
+
+      <div class="note-card">
+        <div class="panel-title" style="margin-bottom:8px;">3. They send you a message</div>
+        <div class="chat-text">
+          They can contact you through FlameTag without needing to download an app.
+        </div>
+      </div>
+
+      <div class="note-card">
+        <div class="panel-title" style="margin-bottom:8px;">4. You arrange the return</div>
+        <div class="chat-text">
+          You receive the message and arrange how to get your item back.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top:14px;">
+    <div class="section-title public-title">Perfect for</div>
+    <div class="big-message">
+      Keys • Bags • Luggage • Wallets • Bikes • Cameras • School items • Work equipment
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top:14px;">
+    <div class="section-title public-title">Why people use FlameTag</div>
+    <div class="big-message" style="white-space: pre-wrap;">
+      • No app required
+      • Fast and simple
+      • Anonymous messaging
+      • Works with any phone camera
+      • Easy to attach to everyday items
+    </div>
+  </div>
+
+  <div class="btn-row" style="justify-content:center; margin-top:18px;">
+    <a class="btn primary" href="{{ url_for('main.home') }}">Go to search</a>
+  </div>
+
+  <div class="small-note" style="text-align:center; margin-top:18px;">
+    🔥 Powered by FlameTag • Secure anonymous item return
+  </div>
+</div>
+
+{% endblock %}
