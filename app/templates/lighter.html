@@ -276,9 +276,12 @@
 
   {% endif %}
 
-  <div class="small-note" style="text-align:center; margin-top:18px;">
-    🔥 Powered by FlameTag • {{ _("Secure anonymous item return") }}
-  </div>
+<div class="small-note" style="text-align:center; margin-top:18px;">
+  🔥 Powered by FlameTag • {{ _("Secure anonymous item return") }} •
+  <a href="{{ url_for('main.how_it_works') }}" style="color:inherit; text-decoration:underline;">
+    {{ _("How it works") }}
+  </a>
+</div>
 
 </div>
 
