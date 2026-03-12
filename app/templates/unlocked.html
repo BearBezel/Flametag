@@ -1,43 +1,61 @@
 {% extends "base.html" %}
 {% block content %}
 
+<div id="loadingScreen">
+  <div class="loading-inner">
+    <div class="flame">🔥</div>
+    <div class="loading-title">FlameTag</div>
+    <div class="loading-sub">Opening owner messages...</div>
+  </div>
+</div>
+
 <div class="page">
   <div class="page-header">
+
+    <div class="top-mini-actions">
+      <a class="mini-emoji-btn" href="{{ url_for('main.lighter_page', token=lighter.token) }}" aria-label="Back to tag">↩️</a>
+      <a class="mini-emoji-btn" href="{{ url_for('main.home') }}" aria-label="Search">🔎</a>
+    </div>
+
     <div class="badge">
       Messages • <span class="code">{{ lighter.token }}</span>
     </div>
 
     <h1 class="page-title" style="margin-top:14px;">Owner messages</h1>
+
     <p class="page-subtitle">
-      Private message + all finder notes are shown here.
+      Private message and finder notes are shown here.
     </p>
 
-    <div class="subnav" style="margin-top:14px;">
-      <a class="subnav-left" href="{{ url_for('main.lighter_page', token=lighter.token) }}">
-        <span class="subnav-icon">←</span>
-        <span class="subnav-title">Back to Tag</span>
-      </a>
-
-      <a class="subnav-right ghost" href="{{ url_for('main.home') }}">Search</a>
-    </div>
+    <p class="finder-explainer">
+      View your private owner message and any notes left by people who found your item.
+    </p>
   </div>
 
   <div class="panel">
-    <div class="panel-title">Private message</div>
+    <div class="section-title public-title">Private message</div>
+
     <div class="big-message" style="white-space: pre-wrap;">
       {{ lighter.private_message or "No private message set yet." }}
     </div>
   </div>
 
   <div class="panel" style="margin-top:14px;">
-    <div class="panel-title">Finder messages</div>
+    <div class="section-title public-title">Finder messages</div>
 
     {% if found_messages and found_messages|length > 0 %}
       <div class="chat-stack">
         {% for m in found_messages %}
           <div class="note-card">
-            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:8px;">
-              <span class="code">{{ m.item_label or "General" }}</span>
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:8px;">
+              <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                <span class="code">{{ m.item_label or "General" }}</span>
+
+                {% if m.finder_name %}
+                  <span class="small-note" style="margin:0;">{{ m.finder_name }}</span>
+                {% endif %}
+              </div>
+
               <span class="small-note" style="margin:0;">{{ m.created_at }}</span>
             </div>
 
@@ -45,11 +63,9 @@
               {{ m.note }}
             </div>
 
-            {% if m.finder_name or m.finder_contact %}
+            {% if m.finder_contact %}
               <div class="small-note" style="margin-top:8px;">
-                {% if m.finder_name %}{{ m.finder_name }}{% endif %}
-                {% if m.finder_name and m.finder_contact %} • {% endif %}
-                {% if m.finder_contact %}{{ m.finder_contact }}{% endif %}
+                Contact: {{ m.finder_contact }}
               </div>
             {% endif %}
           </div>
@@ -59,6 +75,57 @@
       <div class="small-note">No one has left a note yet.</div>
     {% endif %}
   </div>
+
+  <div class="small-note" style="text-align:center; margin-top:18px;">
+    🔥 Powered by FlameTag • Secure anonymous item return
+  </div>
 </div>
+
+<style>
+  #loadingScreen{
+    position:fixed;
+    inset:0;
+    background:#060b18;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+    transition:opacity 0.4s ease;
+  }
+
+  .loading-inner{
+    text-align:center;
+    color:white;
+  }
+
+  .flame{
+    font-size:34px;
+  }
+
+  .loading-title{
+    font-size:28px;
+    font-weight:800;
+    margin-top:10px;
+  }
+
+  .loading-sub{
+    opacity:0.72;
+    font-size:14px;
+    margin-top:6px;
+  }
+</style>
+
+<script>
+  window.addEventListener("load", function () {
+    setTimeout(function () {
+      const loader = document.getElementById("loadingScreen");
+      if (loader) {
+        loader.style.opacity = "0";
+        loader.style.pointerEvents = "none";
+        setTimeout(() => loader.remove(), 400);
+      }
+    }, 700);
+  });
+</script>
 
 {% endblock %}
