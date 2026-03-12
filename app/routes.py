@@ -132,6 +132,9 @@ def ensure_default_items(lighter: Lighter):
 def home():
     return render_template("home.html", hide_topbar=True)
 
+@bp.get("/how-it-works")
+def how_it_works():
+    return render_template("how_it_works.html")
 
 @bp.get("/l/<token>")
 def lighter_page(token):
