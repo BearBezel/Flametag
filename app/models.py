@@ -13,6 +13,8 @@ class Lighter(db.Model):
 
     public_message = db.Column(db.Text, nullable=True)
     private_message = db.Column(db.Text, nullable=True)
+    owner_phone = db.Column(db.String(40), nullable=True)
+    show_owner_phone = db.Column(db.Boolean, nullable=False, default=False)
     owner_email = db.Column(db.String(120), nullable=True)
 
     scan_count = db.Column(db.Integer, nullable=False, default=0)
