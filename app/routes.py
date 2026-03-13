@@ -164,9 +164,10 @@ def claim_lighter(token):
         flash("This tag is already claimed.", "err")
         return redirect(url_for("main.lighter_page", token=token))
 
-    public_message = (request.form.get("public_message") or "").strip()
-    private_message = (request.form.get("private_message") or "").strip()
-    pin = (request.form.get("pin") or "").strip()
+     public_message = (request.form.get("public_message") or "").strip()
+     private_message = (request.form.get("private_message") or "").strip()
+     owner_phone = (request.form.get("owner_phone") or "").strip()
+     pin = (request.form.get("pin") or "").strip()
 
     # NEW: owner email (optional but recommended)
     owner_email = (request.form.get("owner_email") or "").strip().lower()
@@ -177,6 +178,8 @@ def claim_lighter(token):
 
     lighter.public_message = public_message or "🔥 This is owned. Please return it."
     lighter.private_message = private_message or "Thanks for finding this."
+    lighter.owner_phone = owner_phone or None
+    lighter.show_owner_phone = False
     lighter.owner_pin_hash = generate_password_hash(pin)
     lighter.claimed_at = datetime.utcnow()
     lighter.updated_at = datetime.utcnow()
@@ -207,6 +210,8 @@ def edit_lighter(token):
     public_message = (request.form.get("public_message") or "").strip()
     private_message = (request.form.get("private_message") or "").strip()
     owner_email = (request.form.get("owner_email") or "").strip().lower()
+    owner_phone = (request.form.get("owner_phone") or "").strip()
+    show_owner_phone = request.form.get("show_owner_phone") == "on"
 
     if public_message:
         lighter.public_message = public_message
@@ -214,6 +219,9 @@ def edit_lighter(token):
         lighter.private_message = private_message
     if owner_email:
         lighter.owner_email = owner_email
+
+    lighter.owner_phone = owner_phone or None
+    lighter.show_owner_phone = show_owner_phone
 
     items_text = (request.form.get("items") or "").strip()
     if items_text:
