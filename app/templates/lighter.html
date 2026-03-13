@@ -54,6 +54,12 @@
       {{ lighter.public_message or _("🔥 This tag is owned. Please return it.") }}
     </div>
 
+    {% if lighter.show_owner_phone and lighter.owner_phone %}
+      <div class="small-note" style="margin-top:10px;">
+        {{ _("Phone:") }} <strong>{{ lighter.owner_phone }}</strong>
+      </div>
+    {% endif %}
+
     {% set msg = (lighter.public_message or "")|lower %}
     {% if "reward" in msg or "£" in (lighter.public_message or "") or "$" in (lighter.public_message or "") or "€" in (lighter.public_message or "") %}
       <div class="reward-pill">
@@ -173,6 +179,22 @@
             <label>{{ _("Owner email (alerts + PIN reset)") }}</label>
             <input name="owner_email" value="{{ lighter.owner_email or '' }}" placeholder="you@email.com" />
 
+            <label>{{ _("Phone number") }}</label>
+            <input
+              name="owner_phone"
+              value="{{ lighter.owner_phone or '' }}"
+              placeholder="{{ _('Optional phone number') }}"
+            />
+
+            <label style="display:flex; align-items:center; gap:10px;">
+              <input
+                type="checkbox"
+                name="show_owner_phone"
+                {% if lighter.show_owner_phone %}checked{% endif %}
+              />
+              {{ _("Show my phone number publicly") }}
+            </label>
+
             <label>{{ _("Items on this tag (one per line)") }}</label>
             <textarea name="items" rows="5" placeholder="{{ _('Keys\nWallet\nBag\nLighter\nOther') }}">{% if lighter.items and lighter.items|length > 0 %}{% for it in lighter.items %}{{ it.label }}{% if not loop.last %}&#10;{% endif %}{% endfor %}{% endif %}</textarea>
 
@@ -267,6 +289,9 @@
         <label>{{ _("Owner email (for alerts + PIN reset)") }}</label>
         <input name="owner_email" placeholder="you@email.com" />
 
+        <label>{{ _("Phone number") }}</label>
+        <input name="owner_phone" placeholder="{{ _('Optional phone number') }}" />
+
         <label>{{ _("Choose a PIN (min 4 chars)") }}</label>
         <input name="pin" placeholder="{{ _('Choose a PIN') }}" />
 
@@ -276,12 +301,12 @@
 
   {% endif %}
 
-<div class="small-note" style="text-align:center; margin-top:18px;">
-  🔥 Powered by FlameTag • {{ _("Secure anonymous item return") }} •
-  <a href="{{ url_for('main.how_it_works') }}" style="color:inherit; text-decoration:underline;">
-    {{ _("How it works") }}
-  </a>
-</div>
+  <div class="small-note" style="text-align:center; margin-top:18px;">
+    🔥 Powered by FlameTag • {{ _("Secure anonymous item return") }} •
+    <a href="{{ url_for('main.how_it_works') }}" style="color:inherit; text-decoration:underline;">
+      {{ _("How it works") }}
+    </a>
+  </div>
 
 </div>
 
