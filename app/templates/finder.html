@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="page">
+
+  <div class="badge">
+    FlameTag • <span class="code">{{ lighter.token }}</span>
+  </div>
+
+  <h1 class="page-title">You found an item 🔥</h1>
+
+  <div class="panel">
+    <div class="section-title">Message from owner</div>
+
+    <div class="big-message">
+      {{ lighter.public_message or "🔥 Please return this item." }}
+    </div>
+
+    {% if lighter.show_owner_phone and lighter.owner_phone %}
+      <div style="margin-top:10px;">
+        📞 {{ lighter.owner_phone }}
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="panel" style="margin-top:14px;">
+    <div class="section-title">Send a message</div>
+
+    <form method="post" action="{{ url_for('main.found_lighter', token=lighter.token) }}" class="stack">
+
+      <textarea name="found_note" rows="4" required placeholder="Where did you find it?"></textarea>
+
+      <button class="btn primary">Send message</button>
+
+    </form>
+  </div>
+
+</div>
+
+{% endblock %}
