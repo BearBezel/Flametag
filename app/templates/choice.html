@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="page" style="text-align:center; padding-top:40px;">
+
+  <div class="badge">
+    FlameTag • <span class="code">{{ lighter.token }}</span>
+  </div>
+
+  <h1 class="page-title" style="margin-top:20px;">
+    What would you like to do?
+  </h1>
+
+  <p class="page-subtitle">
+    Select your role to continue
+  </p>
+
+  <div class="choice-container">
+
+    <!-- Finder -->
+    <a href="{{ url_for('main.finder_page', token=lighter.token) }}"
+       class="choice-card">
+
+      <div class="choice-title">I found this item</div>
+      <div class="choice-sub">
+        Send a message to help return it to the owner
+      </div>
+
+    </a>
+
+    <!-- Owner -->
+    <a href="{{ url_for('main.owner_page', token=lighter.token) }}"
+       class="choice-card">
+
+      <div class="choice-title">I’m the owner</div>
+      <div class="choice-sub">
+        Manage your tag, messages and details
+      </div>
+
+    </a>
+
+  </div>
+
+</div>
+
+<style>
+  .choice-container{
+    margin-top:30px;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+  }
+
+  .choice-card{
+    display:block;
+    padding:18px;
+    border-radius:14px;
+    background:#111;
+    border:1px solid #2a2a2a;
+    text-decoration:none;
+    color:#fff;
+    transition: all 0.2s ease;
+  }
+
+  .choice-card:hover{
+    transform: translateY(-2px);
+    border-color:#555;
+    background:#151515;
+  }
+
+  .choice-title{
+    font-size:16px;
+    font-weight:600;
+  }
+
+  .choice-sub{
+    font-size:13px;
+    opacity:0.7;
+    margin-top:6px;
+  }
+</style>
+
+{% endblock %}
