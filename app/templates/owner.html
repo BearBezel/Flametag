@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="page">
+
+  <div class="badge">
+    FlameTag • <span class="code">{{ lighter.token }}</span> • Owner
+  </div>
+
+  <h1 class="page-title">Owner dashboard</h1>
+
+  <div class="panel">
+    <div class="section-title">Your message</div>
+
+    <div class="big-message">
+      {{ lighter.public_message }}
+    </div>
+
+    <a href="{{ url_for('main.finder_page', token=lighter.token) }}"
+       class="btn secondary small"
+       style="margin-top:10px;">
+      👁 View finder page
+    </a>
+  </div>
+
+  <div class="panel" style="margin-top:14px;">
+    <form method="post" action="{{ url_for('main.edit_lighter', token=lighter.token) }}" class="stack">
+
+      <label>Public message</label>
+      <textarea name="public_message">{{ lighter.public_message }}</textarea>
+
+      <label>Phone</label>
+      <input name="owner_phone" value="{{ lighter.owner_phone or '' }}">
+
+      <label>
+        <input type="checkbox" name="show_owner_phone" {% if lighter.show_owner_phone %}checked{% endif %}>
+        Show phone publicly
+      </label>
+
+      <button class="btn primary">Save</button>
+
+    </form>
+  </div>
+
+</div>
+
+{% endblock %}
