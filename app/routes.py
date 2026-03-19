@@ -182,6 +182,37 @@ def owner_page(token):
     if not lighter.is_claimed():
         return redirect(url_for("main.finder_page", token=token))
 
+    return render_template("owner_pin.html", lighter=lighter)
+
+
+@bp.post("/l/<token>/owner")
+def owner_unlock(token):
+    lighter = get_or_404(token)
+
+    if not lighter.is_claimed():
+        return redirect(url_for("main.finder_page", token=token))
+
+    pin = (request.form.get("pin") or "").strip()
+    if not pin or not lighter.owner_pin_hash or not check_password_hash(lighter.owner_pin_hash, pin):
+        flash("Wrong owner PIN.", "err")
+        return redirect(url_for("main.owner_page", token=token))
+
+    session[f"owner_ok_{token}"] = True
+    flash("Owner dashboard unlocked.", "ok")
+    return redirect(url_for("main.owner_dashboard", token=token))
+
+
+@bp.get("/l/<token>/owner/dashboard")
+def owner_dashboard(token):
+    lighter = get_or_404(token)
+
+    if not lighter.is_claimed():
+        return redirect(url_for("main.finder_page", token=token))
+
+    if not session.get(f"owner_ok_{token}"):
+        flash("Owner PIN required.", "err")
+        return redirect(url_for("main.owner_page", token=token))
+
     ensure_default_items(lighter)
 
     unread_count = FoundMessage.query.filter_by(
