@@ -209,7 +209,7 @@ def owner_dashboard(token):
     if not lighter.is_claimed():
         return redirect(url_for("main.finder_page", token=token))
 
-    if not session.get(f"owner_ok_{token}"):
+    if not (session.get(f"edit_ok_{token}") or session.get(f"owner_ok_{token}")):
         flash("Owner PIN required.", "err")
         return redirect(url_for("main.owner_page", token=token))
 
