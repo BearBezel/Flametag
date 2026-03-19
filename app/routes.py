@@ -151,6 +151,10 @@ def how_it_works():
 @bp.get("/l/<token>")
 def lighter_page(token):
     lighter = get_or_404(token)
+    return render_template("choice.html", lighter=lighter)
+@bp.get("/l/<token>/finder")
+def finder_page(token):
+    lighter = get_or_404(token)
 
     lighter.scan_count += 1
     lighter.updated_at = datetime.utcnow()
@@ -161,15 +165,35 @@ def lighter_page(token):
         ensure_default_items(lighter)
         unread_count = FoundMessage.query.filter_by(
             lighter_id=lighter.id,
-            is_read=False,
+            is_read=False
         ).count()
 
     return render_template(
-        "lighter.html",
+        "finder.html",
         lighter=lighter,
-        unread_count=unread_count,
+        unread_count=unread_count
     )
 
+
+@bp.get("/l/<token>/owner")
+def owner_page(token):
+    lighter = get_or_404(token)
+
+    if not lighter.is_claimed():
+        return redirect(url_for("main.finder_page", token=token))
+
+    ensure_default_items(lighter)
+
+    unread_count = FoundMessage.query.filter_by(
+        lighter_id=lighter.id,
+        is_read=False
+    ).count()
+
+    return render_template(
+        "owner.html",
+        lighter=lighter,
+        unread_count=unread_count
+    )
 
 # ---------------- Claim / Edit ----------------
 @bp.post("/l/<token>/claim")
