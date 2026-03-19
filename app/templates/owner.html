@@ -118,14 +118,17 @@
             placeholder="{{ _('Optional phone number') }}"
           />
 
-          <label style="display:flex; align-items:center; gap:10px;">
-            <input
-              type="checkbox"
-              name="show_owner_phone"
-              {% if lighter.show_owner_phone %}checked{% endif %}
-            />
-            {{ _("Show my phone number publicly") }}
-          </label>
+         <label style="display:block;">
+           {{ _("Show my phone number publicly") }}
+         </label>
+         <label style="display:flex; align-items:center; gap:10px; margin-top:-4px;">
+           <input
+             type="checkbox"
+             name="show_owner_phone"
+             {% if lighter.show_owner_phone %}checked{% endif %}
+           />
+           <span>{{ _("Enable public phone display") }}</span>
+         </label>
 
           <label>{{ _("Items on this tag (one per line)") }}</label>
           <textarea name="items" rows="5" placeholder="{{ _('Keys\nWallet\nBag\nLighter\nOther') }}">{% if lighter.items and lighter.items|length > 0 %}{% for it in lighter.items %}{{ it.label }}{% if not loop.last %}&#10;{% endif %}{% endfor %}{% endif %}</textarea>
