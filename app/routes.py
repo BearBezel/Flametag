@@ -323,6 +323,34 @@ def edit_unlock(token):
     return redirect(url_for("main.lighter_page", token=token) + "#tab-edit")
 
 
+@bp.post("/l/<token>/delete")
+def delete_lighter(token):
+    lighter = get_or_404(token)
+
+    # Owner session OR admin can delete
+    if not (session.get(f"owner_ok_{token}") or session.get(f"edit_ok_{token}") or admin_authed()):
+        flash("Owner PIN required to delete this tag.", "err")
+        return redirect(url_for("main.owner_page", token=token))
+
+    # delete related records first
+    FoundMessage.query.filter_by(lighter_id=lighter.id).delete()
+    LighterItem.query.filter_by(lighter_id=lighter.id).delete()
+
+    db.session.delete(lighter)
+    db.session.commit()
+
+    # clear sessions
+    session.pop(f"owner_ok_{token}", None)
+    session.pop(f"edit_ok_{token}", None)
+
+    # clear generated token if it matches
+    if session.get("generated_token") == token:
+        session.pop("generated_token", None)
+
+    flash("Tag deleted successfully.", "ok")
+    return redirect(url_for("main.home"))
+
+
 # ---------------- Finder -> leave a message (EMAIL ALERT) ----------------
 @bp.post("/l/<token>/found")
 def found_lighter(token):
