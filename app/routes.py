@@ -629,6 +629,22 @@ def admin_import():
     return redirect(url_for("main.admin"))
 
 
+@bp.post("/admin/delete/<token>")
+def admin_delete_tag(token):
+    require_admin()
+
+    lighter = get_or_404(token)
+
+    FoundMessage.query.filter_by(lighter_id=lighter.id).delete()
+    LighterItem.query.filter_by(lighter_id=lighter.id).delete()
+
+    db.session.delete(lighter)
+    db.session.commit()
+
+    flash(f"Tag {token} deleted.", "ok")
+    return redirect(url_for("main.admin"))
+
+
 # ---------------- QR ----------------
 @bp.get("/qr/<token>")
 def qr_code(token):
