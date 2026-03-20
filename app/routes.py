@@ -656,7 +656,6 @@ def admin_delete_tag(token):
     flash(f"Tag {token} deleted.", "ok")
     return redirect(url_for("main.admin"))
 
-
 # ---------------- QR ----------------
 @bp.get("/qr/<token>")
 def qr_code(token):
