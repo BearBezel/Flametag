@@ -635,9 +635,16 @@ def admin_delete_tag(token):
 
     lighter = get_or_404(token)
 
-    FoundMessage.query.filter_by(lighter_id=lighter.id).delete()
+    # 🔥 delete messages first (IMPORTANT)
+    db.session.execute(
+        text("DELETE FROM found_notes WHERE lighter_id = :id"),
+        {"id": lighter.id}
+    )
+
+    # delete items
     LighterItem.query.filter_by(lighter_id=lighter.id).delete()
 
+    # delete tag
     db.session.delete(lighter)
     db.session.commit()
 
